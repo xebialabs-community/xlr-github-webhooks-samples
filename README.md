@@ -1,6 +1,6 @@
 # Xlr-github-webhooks-samples
 
-This repo contains examples of webhooks json requests and XL Release templates.
+This repo contains examples of webhooks json requests to XL Release webhooks endpoints.
 
 Please refer to the following links for more information:  
 Github docs -> https://developer.github.com/webhooks/event-payloads/#create  
