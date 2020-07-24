@@ -22,7 +22,7 @@ Select *webhook event trigger* as trigger type and select the event source creat
 Fill in other fields as needed.
 ### 3a - Features for trigger set ups
 Select a filter rule from the drop down list in order to filter requests to this trigger.
-Under visual design a rule set up would look something like: ![screenshot of Trigger Rules](screenshots/trigger_rules.png)
+Under visual design a rule set up would look something like: ![screenshot of Trigger Rules](screenshots/trigger_type_rules.png)
 By creating this rule this trigger would only be triggered when the event.ref would be equals to the specified ref in request from github.
 e.g the json request would look something like
  ```
