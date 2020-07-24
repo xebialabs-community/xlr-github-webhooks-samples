@@ -44,4 +44,6 @@ e.g the json request would look something like
 }
 ``` 
 
-### 3b - 
+### 3b - Use elements of json as values for XLR 
+Elements of the json request can be used as values for xlr fields as for example: 
+![screenshot of ReleaseformTemplate](screenshots/release_form_template.png)
