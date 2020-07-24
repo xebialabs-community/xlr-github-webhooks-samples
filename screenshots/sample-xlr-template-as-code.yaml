@@ -1,0 +1,42 @@
+---
+apiVersion: xl-release/v1
+kind: Templates
+spec:
+- directory: Test
+  children:
+  - name: Github Webhooks Endpoint
+    type: events.PostWebhookEndpoint
+    path: test-github
+    authentication:
+      type: events.NoAuthentication
+  - template: GithubWebhooksTemplate
+    scheduledStartDate: 2020-07-23T09:00:00-04:00
+    phases:
+    - phase: New Phase
+      tasks:
+      - name: Print HelloWorld
+        type: xlrelease.ScriptTask
+        script: print "Hello World"
+    variables:
+    - type: xlrelease.StringVariable
+      key: release_name
+    - type: xlrelease.StringVariable
+      key: release_reference
+    riskProfile: Default risk profile
+  - name: GIthub Sample Trigger
+    type: events.EventBasedTrigger
+    description: Demo Github sample trigger
+    mappedProperties:
+    - type: xlrelease.StringValue
+      targetProperty: releaseTitle
+      value: ${event.head_commit.message}
+    - type: xlrelease.ListStringValue
+      targetProperty: tags
+      value:
+      - ${event.head_commit.timestamp}
+    - type: xlrelease.StringValue
+      targetProperty: template
+      value: GithubWebhooksTemplate
+    triggerActionType: xlrelease.CreateReleaseFromTemplateAction
+    eventSource: Github Webhooks Endpoint
+    eventType: events.HttpRequestEvent
