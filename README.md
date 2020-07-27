@@ -27,7 +27,7 @@ By creating this rule this trigger would only be triggered when the event.ref wo
 e.g the json request would look something like
  ```
 {
-  "ref": "refs/heads/master",      <-------
+  "ref": "refs/heads/master",      <--------
   "before": "958fb9525db170a4044f23429caea13603a4666a",
   "after": "48303e0898c591765c7b839d99f73f98f84eca80",
   "repository": {"some data here"},
