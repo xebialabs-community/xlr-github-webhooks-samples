@@ -2,41 +2,115 @@
 apiVersion: xl-release/v1
 kind: Templates
 spec:
-- directory: Test
-  children:
-  - name: Github Webhooks Endpoint
-    type: events.PostWebhookEndpoint
-    path: test-github
-    authentication:
-      type: events.NoAuthentication
-  - template: GithubWebhooksTemplate
-    scheduledStartDate: 2020-07-23T09:00:00-04:00
-    phases:
-    - phase: New Phase
-      tasks:
-      - name: Print HelloWorld
-        type: xlrelease.ScriptTask
-        script: print "Hello World"
-    variables:
-    - type: xlrelease.StringVariable
-      key: release_name
-    - type: xlrelease.StringVariable
-      key: release_reference
-    riskProfile: Default risk profile
-  - name: GIthub Sample Trigger
-    type: events.EventBasedTrigger
-    description: Demo Github sample trigger
-    mappedProperties:
-    - type: xlrelease.StringValue
-      targetProperty: releaseTitle
-      value: ${event.head_commit.message}
-    - type: xlrelease.ListStringValue
-      targetProperty: tags
-      value:
-      - ${event.head_commit.timestamp}
-    - type: xlrelease.StringValue
-      targetProperty: template
-      value: GithubWebhooksTemplate
-    triggerActionType: xlrelease.CreateReleaseFromTemplateAction
-    eventSource: Github Webhooks Endpoint
-    eventType: events.HttpRequestEvent
+  - directory: Test
+    children:
+      - template: GithubWebhooksTemplate
+        scheduledStartDate: 2020-07-23T09:00:00-04:00
+        phases:
+          - phase: New Phase
+            tasks:
+              - name: Print HelloWorld
+                type: xlrelease.ScriptTask
+                script: |-
+                  print "Hello World"
+                  print ${repository_name}
+                  print ${branch_name}
+                  print ${pull_request_status}
+                  print ${pull_request_author}
+                  print ${pull_request_action}
+                  print ${pull_request_assignees}
+        variables:
+          - type: xlrelease.StringVariable
+            key: repository_name
+            requiresValue: false
+          - type: xlrelease.StringVariable
+            key: branch_name
+            requiresValue: false
+          - type: xlrelease.StringVariable
+            key: pull_request_status
+            requiresValue: false
+          - type: xlrelease.StringVariable
+            key: pull_request_author
+            requiresValue: false
+          - type: xlrelease.StringVariable
+            key: pull_request_action
+            requiresValue: false
+          - type: xlrelease.StringVariable
+            key: pull_request_assignees
+            requiresValue: false
+        riskProfile: Default risk profile
+      - name: Github Push Event Trigger
+        type: events.EventBasedTrigger
+        description: Sample for github push event
+        mappedProperties:
+          - type: xlrelease.StringValue
+            targetProperty: releaseTitle
+            value: ${event.head_commit.message}
+          - type: xlrelease.StringValue
+            targetProperty: variables[repository_name]
+            value: ${event.repository.name}
+          - type: xlrelease.StringValue
+            targetProperty: variables[branch_name]
+            value: ${event.repository.default_branch}
+          - type: xlrelease.ListStringValue
+            targetProperty: tags
+            value:
+              - ${event.head_commit.timestamp}
+          - type: xlrelease.StringValue
+            targetProperty: template
+            value: GithubWebhooksTemplate
+        triggerActionType: xlrelease.CreateReleaseFromTemplateAction
+        eventSource: Github Webhooks Endpoint
+        eventType: events.HttpRequestEvent
+        eventFilter:
+          type: events.ExpressionEventFilter
+          expressions:
+            - type: events.EventFilterExpressionItem
+              path: event.head_commit.author.name
+              operator: EQUALS
+              valueType: STRING
+              value: Fellipe A
+      - name: Github Pull Request Event Trigger
+        type: events.EventBasedTrigger
+        description: Sample trigger for pull requests.
+        mappedProperties:
+          - type: xlrelease.StringValue
+            targetProperty: releaseTitle
+            value: PR created id (${event.pull_request.id}) by ${event.sender.login} assigned
+              to ${event.requested_reviewer.login}
+          - type: xlrelease.StringValue
+            targetProperty: variables[repository_name]
+            value: ${event.repository.name}
+          - type: xlrelease.StringValue
+            targetProperty: variables[pull_request_action]
+            value: ${event.action}
+          - type: xlrelease.StringValue
+            targetProperty: variables[branch_name]
+            value: ${event.pull_request.head.ref}
+          - type: xlrelease.StringValue
+            targetProperty: variables[pull_request_status]
+            value: ${event.pull_request.state}
+          - type: xlrelease.StringValue
+            targetProperty: variables[pull_request_author]
+            value: ${event.sender.login}
+          - type: xlrelease.StringValue
+            targetProperty: variables[pull_request_assignees]
+            value: ${event.requested_reviewer.login}
+          - type: xlrelease.ListStringValue
+            targetProperty: tags
+            value:
+              - ${event.pull_request.created_at}
+          - type: xlrelease.StringValue
+            targetProperty: template
+            value: GithubWebhooksTemplate
+        triggerActionType: xlrelease.CreateReleaseFromTemplateAction
+        eventSource: Github Webhooks Endpoint
+        eventType: events.HttpRequestEvent
+        eventFilter:
+          type: events.ExpressionEventFilter
+          expressions:
+            - type: events.EventFilterExpressionItem
+              path: event.pull_request.state
+              operator: EQUALS
+              valueType: STRING
+              value: open
