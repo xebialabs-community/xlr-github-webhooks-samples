@@ -89,7 +89,7 @@ This is the template after execution (push trigger) variables and release title 
 ### Features for trigger set ups
 Trigger type with Pull request filter example: 
 Pull request trigger will only be executed if action is 'open'.
-![screenshot of TriggerTypePr](screenshots/trigger_type_pr.png)
+![screenshot of TriggerTypePr](screenshots/trigger_type_pr_.png)
 
 ### Use elements of json as values for XLR 
 Release form with pull request example: 
@@ -98,8 +98,8 @@ Release title built with elements from json.
 
 ### Use Template variables 
 Release variables with pull request example:
-![screenshot of TemplateVariables](screenshots/template_variables_pr.png)
+![screenshot of TemplateVariables](screenshots/template_variables_pr_.png)
 
 Template after pull request trigger execution
 Title is formed correctly and variables populated for example: 
-![screenshot of TemplateAfterPrExecuition](screenshots/template_after_pr_trigger_execution.png)
+![screenshot of TemplateAfterPrExecution](screenshots/template_after_pr_trigger_execution_.png)

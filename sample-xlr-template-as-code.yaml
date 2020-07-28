@@ -19,6 +19,7 @@ spec:
                   print ${pull_request_author}
                   print ${pull_request_action}
                   print ${pull_request_assignees}
+            color: '#0079BC'
         variables:
           - type: xlrelease.StringVariable
             key: repository_name
@@ -37,6 +38,12 @@ spec:
             requiresValue: false
           - type: xlrelease.StringVariable
             key: pull_request_assignees
+            requiresValue: false
+          - type: xlrelease.ListStringVariable
+            key: pull_request_labels
+            requiresValue: false
+          - type: xlrelease.MapStringStringVariable
+            key: pull_request_map
             requiresValue: false
         riskProfile: Default risk profile
       - name: Github Push Event Trigger
@@ -100,6 +107,12 @@ spec:
             targetProperty: tags
             value:
               - ${event.pull_request.created_at}
+          - type: xlrelease.VariableValue
+            targetProperty: variables[pull_request_map]
+            variableKey: event.pull_request
+          - type: xlrelease.VariableValue
+            targetProperty: variables[pull_request_labels]
+            variableKey: event.pull_request.labels
           - type: xlrelease.StringValue
             targetProperty: template
             value: GithubWebhooksTemplate
@@ -107,10 +120,7 @@ spec:
         eventSource: Github Webhooks Endpoint
         eventType: events.HttpRequestEvent
         eventFilter:
-          type: events.ExpressionEventFilter
-          expressions:
-            - type: events.EventFilterExpressionItem
-              path: event.pull_request.state
-              operator: EQUALS
-              valueType: STRING
-              value: open
+          type: events.GroovyEventFilter
+          expr: "event.action in [\"opened\",\"reopened\",\"syncronized\"] &&\nevent.pull_request.labels.name.contains(\"\
+        build\") && \nevent.pull_request.base.ref == \"master\" &&\nevent.repository.name\
+        \ == \"xlr-github-webhooks-samples\""
