@@ -12,13 +12,9 @@ spec:
               - name: Print HelloWorld
                 type: xlrelease.ScriptTask
                 script: |-
-                  print "Hello World"
-                  print ${repository_name}
-                  print ${branch_name}
-                  print ${pull_request_status}
-                  print ${pull_request_author}
-                  print ${pull_request_action}
-                  print ${pull_request_assignees}
+                  variables = releaseApi.getVariables(release.id)
+                  for var in variables:
+                     print(var.key +' '+ var.value)
             color: '#0079BC'
         variables:
           - type: xlrelease.StringVariable
@@ -45,6 +41,8 @@ spec:
           - type: xlrelease.MapStringStringVariable
             key: pull_request_map
             requiresValue: false
+        scriptUsername: admin
+        scriptUserPassword: !value "xlrelease_Release_GithubWebhooksTemplate_scriptUserPassword"
         riskProfile: Default risk profile
       - name: Github Push Event Trigger
         type: events.EventBasedTrigger
