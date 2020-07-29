@@ -71,10 +71,15 @@ spec:
           type: events.ExpressionEventFilter
           expressions:
             - type: events.EventFilterExpressionItem
-              path: event.head_commit.author.name
+              path: event.ref
+              operator: INCLUDES
+              valueType: STRING
+              value: master
+            - type: events.EventFilterExpressionItem
+              path: event.repository.name
               operator: EQUALS
               valueType: STRING
-              value: Fellipe A
+              value: xlr-github-webhooks-samples
       - name: Github Pull Request Event Trigger
         type: events.EventBasedTrigger
         description: Sample trigger for pull requests.
