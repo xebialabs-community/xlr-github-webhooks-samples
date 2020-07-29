@@ -22,17 +22,17 @@ Select *webhook event trigger* as trigger type and select the event source creat
 Fill in other fields as needed.
 ### Features for trigger set ups
 Select a filter rule from the drop down list in order to filter requests to this trigger.
-Under visual design a rule set up would look something like: ![screenshot of Trigger Rules](screenshots/trigger_type_and_rules.png)
-By creating this rule this trigger would only be triggered when the author of the push event would be equal to the specified name passed.
+Under visual design a rule set up would look something like: ![screenshot of Trigger Rules](screenshots/trigger_type_push.png)
+By creating this rule this trigger would only be triggered when the reference contains master and the repository is equals to xlr-webhooks-samples of the push event would be equal to the specified name passed.
 e.g the json request would look something like
  ```
 {
-  "ref": "refs/heads/master",      
+  "ref": "refs/heads/master",      <------ filter checks if master is in here
   "before": "958fb9525db170a4044f23429caea13603a4666a",
   "after": "48303e0898c591765c7b839d99f73f98f84eca80",
   "repository": {
      "id": 282020003,
-     "name": "xlr-github-webhooks-samples"
+     "name": "xlr-webhooks-samples" <------- filter checks for this 
   },
   "pusher": {"some data here"},
   "organization": {"some data here"},
@@ -51,7 +51,7 @@ e.g the json request would look something like
       "timestamp": "2020-07-23T14:02:10-04:00",
       "url": "https://github.com/xebialabs-community/xlr-github-webhooks-samples/commit/73f61ed97706a0b1d11e79f6068aba1eb7d271f7",
       "author": {
-        "name": "Fellipe A",     <-------- Author matches filter
+        "name": "Fellipe A",    
         "email": "*****@gmail.com",
         "username": "FellipeAvanci"
       },
