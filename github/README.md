@@ -32,7 +32,7 @@ e.g the json request would look something like
   "after": "48303e0898c591765c7b839d99f73f98f84eca80",
   "repository": {
      "id": 282020003,
-     "name": "xlr-webhooks-samples" <------- filter checks for this 
+     "name": "xlr-webhooks-samples" <------- filter checks for this name
   },
   "pusher": {"some data here"},
   "organization": {"some data here"},
