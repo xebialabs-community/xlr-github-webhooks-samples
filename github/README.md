@@ -1,7 +1,6 @@
 # Xlr-github-webhooks-samples
 ## Setting up an XLR webhook trigger (Github event type -> PUSH)
-Once Add trigger is selected you should have a list of trigger types to choose from.  
-Select *webhook event trigger* as trigger type and select the event source created on step 1.
+Select *webhook event trigger* as trigger type and select the event source created.
 
 Fill in other fields as needed.
 ### Features for trigger set ups
