@@ -1,21 +1,5 @@
 # Xlr-github-webhooks-samples
-
-This repo contains examples of webhooks json requests to XL Release webhooks endpoints.
-
-Please refer to the following links for more information:  
-Github docs -> https://developer.github.com/webhooks/event-payloads/#create  
-Digita.ai docs -> https://docs.xebialabs.com/v.9.7/release/webhooks/webhooks-overview/.
-
-## 1 - How to set up a HTTP Endpoint for Webhooks
-Under *Settings* ->  *Shared Configurations* -> HTTP Endpoint for Webhooks
-
-A Sample configuration would look something like  ![screenshot of SampleConfig](screenshots/sample_config.png)
-
-## 2 - How to set up a trigger from a folder
-
-Under *Design* -> *Folders* and select folder -> *Triggers*  -> *Add trigger*  ![screenshot of AddTriggerMenu](screenshots/add_trigger_menu.png)
-
-## 3 - Setting up an XLR webhook trigger (Github event type -> PUSH)
+## Setting up an XLR webhook trigger (Github event type -> PUSH)
 Once Add trigger is selected you should have a list of trigger types to choose from.  
 Select *webhook event trigger* as trigger type and select the event source created on step 1.
 
@@ -85,7 +69,7 @@ This is the template after execution (push trigger) variables and release title 
 
 ![screenshot of TemplateAfterRelease](screenshots/template_after_push_trigger_execution.png)
 
-## 4 - Setting up an XLR webhook trigger (Github event type -> PULL REQUEST)
+## Setting up an XLR webhook trigger (Github event type -> PULL REQUEST)
 ### Features for trigger set ups
 Trigger type with Pull request filter example: 
 Pull request trigger will only be executed if action is 'open'.
