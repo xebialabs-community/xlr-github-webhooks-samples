@@ -2,19 +2,24 @@
 apiVersion: xl-release/v1
 kind: Templates
 spec:
-  - directory: Test
+  - directory: Webhook Samples
     children:
-      - template: GithubWebhooksTemplate
+      - name: Github Webhook Endpoint
+        type: events.PostWebhookEndpoint
+        path: github-sample-webhook
+        authentication:
+          type: events.NoAuthentication
+      - template: Github Sample Template
         scheduledStartDate: 2020-07-23T09:00:00-04:00
         phases:
-          - phase: New Phase
+          - phase: Demo
             tasks:
-              - name: Print HelloWorld
+              - name: Display variables
                 type: xlrelease.ScriptTask
                 script: |-
                   variables = releaseApi.getVariables(release.id)
                   for var in variables:
-                     print(var.key +' '+ var.value)
+                     print(var.key + ': ' + str(var.value))
             color: '#0079BC'
         variables:
           - type: xlrelease.StringVariable
@@ -42,15 +47,15 @@ spec:
             key: pull_request_map
             requiresValue: false
         scriptUsername: admin
-        scriptUserPassword: !value "xlrelease_Release_GithubWebhooksTemplate_scriptUserPassword"
+        scriptUserPassword: admin
         riskProfile: Default risk profile
       - name: Github Push Event Trigger
         type: events.EventBasedTrigger
-        description: Sample for github push event
+        description: Triggers on push to xlr-webhooks-samples:master
         mappedProperties:
           - type: xlrelease.StringValue
             targetProperty: releaseTitle
-            value: ${event.head_commit.message}
+            value: Build push - ${event.head_commit.message}
           - type: xlrelease.StringValue
             targetProperty: variables[repository_name]
             value: ${event.repository.name}
@@ -63,13 +68,18 @@ spec:
               - ${event.head_commit.timestamp}
           - type: xlrelease.StringValue
             targetProperty: template
-            value: GithubWebhooksTemplate
+            value: Github Sample Template
         triggerActionType: xlrelease.CreateReleaseFromTemplateAction
-        eventSource: Github Webhooks Endpoint
+        eventSource: Github Webhook Endpoint
         eventType: events.HttpRequestEvent
         eventFilter:
           type: events.ExpressionEventFilter
           expressions:
+            - type: events.EventFilterExpressionItem
+              path: headers.['X-GitHub-Event']
+              operator: EQUALS
+              valueType: STRING
+              value: push
             - type: events.EventFilterExpressionItem
               path: event.ref
               operator: INCLUDES
@@ -79,15 +89,14 @@ spec:
               path: event.repository.name
               operator: EQUALS
               valueType: STRING
-              value: xlr-github-webhooks-samples
+              value: xlr-webhooks-samples
       - name: Github Pull Request Event Trigger
         type: events.EventBasedTrigger
-        description: Sample trigger for pull requests.
+        description: Triggers on pull request with BUILD label opened onto xlr-webhooks-samples:master
         mappedProperties:
           - type: xlrelease.StringValue
             targetProperty: releaseTitle
-            value: PR created id (${event.pull_request.id}) by ${event.sender.login} assigned
-              to ${event.requested_reviewer.login}
+            value: Build PR#${event.pull_request.number} - ${event.pull_request.title}
           - type: xlrelease.StringValue
             targetProperty: variables[repository_name]
             value: ${event.repository.name}
@@ -106,24 +115,23 @@ spec:
           - type: xlrelease.StringValue
             targetProperty: variables[pull_request_assignees]
             value: ${event.requested_reviewer.login}
-          - type: xlrelease.ListStringValue
+          - type: xlrelease.VariableValue
             targetProperty: tags
-            value:
-              - ${event.pull_request.created_at}
+            variableKey: event.pull_request.labels..name
           - type: xlrelease.VariableValue
             targetProperty: variables[pull_request_map]
             variableKey: event.pull_request
           - type: xlrelease.VariableValue
             targetProperty: variables[pull_request_labels]
-            variableKey: event.pull_request.labels
+            variableKey: event.pull_request.labels..name
           - type: xlrelease.StringValue
             targetProperty: template
-            value: GithubWebhooksTemplate
+            value: Github Sample Template
         triggerActionType: xlrelease.CreateReleaseFromTemplateAction
-        eventSource: Github Webhooks Endpoint
+        eventSource: Github Webhook Endpoint
         eventType: events.HttpRequestEvent
         eventFilter:
           type: events.GroovyEventFilter
-          expr: "event.action in [\"opened\",\"reopened\",\"syncronized\"] &&\nevent.pull_request.labels.name.contains(\"\
-        build\") && \nevent.pull_request.base.ref == \"master\" &&\nevent.repository.name\
-        \ == \"xlr-github-webhooks-samples\""
+          expr: "headers.'X-GitHub-Event' == 'pull_request' && \nevent.action in [\"opened\",\"reopened\",\"syncronized\"] &&\nevent.pull_request.labels.name.contains(\"\
+        BUILD\") && \nevent.pull_request.base.ref == \"master\" &&\nevent.repository.name\
+        \ == \"xlr-webhooks-samples\""
