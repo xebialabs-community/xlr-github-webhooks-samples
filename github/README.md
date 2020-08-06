@@ -1,14 +1,30 @@
-# Xlr-github-webhooks-samples
-## Setting up an XLR webhook trigger (Github event type -> PUSH)
-Select *webhook event trigger* as trigger type and select the event source created.
+# GitHub Webhook Sample
+
+This sample integration showcases Release triggers for GitHub `pull_request` and `push` webhook events.
+
+The preferred approach of using this sample is by applying the `webhook-integration.yaml` as-code template as described in the main README file.
+
+If you wish to create and configure the triggers manually, please see the following setup instructions.
+
+## Manual trigger setup
+
+Select *Webhook event trigger* as trigger type and select the event source created.
 
 Fill in other fields as needed.
-### Features for trigger set ups
-Select a filter rule from the drop down list in order to filter requests to this trigger.
-Under visual design a rule set up would look something like: ![screenshot of Trigger Rules](screenshots/trigger_type_push.png)
-By creating this rule this trigger would only be triggered when the reference contains master and the repository is equals to xlr-webhooks-samples of the push event would be equal to the specified name passed.
-e.g the json request would look something like
- ```
+
+### GitHub Push Trigger
+
+#### Filter rule
+
+Select a filter rule from the drop down list in order to restrict events on which this trigger will fire.
+
+Example of a `Visual designer` filter: ![screenshot of Trigger Rules](screenshots/trigger_type_push.png)
+
+With this rule in place, the trigger will only fire when the push is made to the `master` branch of the `xlr-github-webhooks-samples` repository. 
+
+Example GitHub `push` event which would satisfy the filter rule:
+
+```
 {
   "ref": "refs/heads/master",      <------ filter checks if master is in here
   "before": "958fb9525db170a4044f23429caea13603a4666a",
@@ -56,33 +72,42 @@ e.g the json request would look something like
 }
 ``` 
 
-### Use elements of json as values for XLR 
-Elements of the json request can be used as values for xlr fields as for example: 
+#### Data mapping
+
+Fields from the incoming JSON event can be mapped directly to release properties like Title and Tags:
+
 ![screenshot of ReleaseformTemplate](screenshots/release_form_template.png)
 
-### Use Template variables 
-Template variables can be filled based on trigger event data as for example:  
+Release variables can also be populated from the incoming JSON fields:
+
 ![screenshot of TemplateVariablesPush](screenshots/template_variables_push.png)
 
-This is the template after execution (push trigger) variables and release title reflecting data from json push event.
+After the trigger has fired and the release was created, the properties and variables of the release will contain the data from the incoming GitHub event: 
 
 ![screenshot of TemplateAfterRelease](screenshots/template_after_push_trigger_execution.png)
 
-## Setting up an XLR webhook trigger (Github event type -> PULL REQUEST)
-### Features for trigger set ups
-Trigger type with Pull request filter example: 
-Pull request trigger will only be executed if action is 'open'.
+### GitHub Pull Request Trigger
+
+#### Filter rule
+
+Select a filter rule from the drop down list in order to restrict events on which this trigger will fire.
+
+The Pull Request filter has a more complex logic so here we use a `Groovy expression` filter: 
+
 ![screenshot of TriggerTypePr](screenshots/trigger_type_pr_.png)
 
-### Use elements of json as values for XLR 
-Release form with pull request example: 
-Release title built with elements from json.
+With this filter in place, the trigger will only fire when the pull request is opened, reopened or when new commits are pushed to the PR. Also, the pull request must have a `build` label and be opened towards the `master` branch of the `xlr-github-webhooks-samples` repository. 
+
+#### Data mapping
+
+Fields from the incoming JSON event can be mapped directly to release properties like Title and Tags:
+
 ![screenshot of ReleaseFormPr](screenshots/release_form_pr.png)
 
-### Use Template variables 
-Release variables with pull request example:
+Release variables can also be populated from the incoming JSON fields:
+
 ![screenshot of TemplateVariables](screenshots/template_variables_pr_.png)
 
-Template after pull request trigger execution
-Title is formed correctly and variables populated for example: 
+After the trigger has fired and the release was created, the properties and variables of the release will contain the data from the incoming GitHub event: 
+
 ![screenshot of TemplateAfterPrExecution](screenshots/template_after_pr_trigger_execution_.png)
