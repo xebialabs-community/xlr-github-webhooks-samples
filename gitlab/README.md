@@ -12,7 +12,7 @@ Merge request events can be tested using both `merge_request_headers.txt` and `m
 Pull events can be tested using both `push_headers.txt` and `push_event.json`.
 
 The sample YAML file will configure the following objects in Release under the *Webhook Samples* folder:
- - Single endpoint for all events from GitLab accessible from **http://<xlr-address>/webhooks/gitlab-sample-webhook**
+ - Single endpoint for all events from GitLab accessible from **http://&lt;xlr-address&gt;/webhooks/gitlab-sample-webhook**
  - Trigger to handle push events
    - This trigger has been configured to use the visual rule editor.  It checks the headers from the event to ensure
      it is executed only for push events.  It checks the event payload to ensure it is only executed when pushing to the
@@ -31,7 +31,7 @@ The sample YAML file will configure the following objects in Release under the *
 
 In GitLab go to the repository you want to enable the webhook events for and navigate to Settings > Webhooks.
 
-For the URL use the endpoint created in Release, in this case **http://<xlr-address>/webhooks/gitlab-sample-webhook**.
+For the URL use the endpoint created in Release, in this case **http://&lt;xlr-address&gt;/webhooks/gitlab-sample-webhook**.
 
 Then choose the events you want send, in this case *Push events* and *Merge request events*.
 
