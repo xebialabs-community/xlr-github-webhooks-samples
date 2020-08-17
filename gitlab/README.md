@@ -1,4 +1,4 @@
-#GitLab Webhook Sample
+# GitLab Webhook Sample
 
 This sample integration showcases Release triggers for GitLab *merge request* and *push* webhook events.
 
