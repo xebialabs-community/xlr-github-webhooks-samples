@@ -1,0 +1,78 @@
+---
+apiVersion: xl-release/v1
+kind: Templates
+spec:
+  - directory: Webhook Samples
+    children:
+      - template: jiraWebhooks
+        scheduledStartDate: 2020-08-17T09:00:00-04:00
+        phases:
+          - phase: New Phase
+            tasks:
+              - name: Print Variables Task
+                type: xlrelease.ScriptTask
+                script: |-
+                  variables = releaseApi.getVariables(release.id)
+                  for var in variables:
+                     print(var.key + ': ' + str(var.value))
+        variables:
+          - type: xlrelease.StringVariable
+            key: release_name
+            requiresValue: false
+          - type: xlrelease.StringVariable
+            key: description
+            requiresValue: false
+          - type: xlrelease.ListStringVariable
+            key: items
+            requiresValue: false
+          - type: xlrelease.StringVariable
+            key: project_name
+            requiresValue: false
+        scriptUsername: admin
+        scriptUserPassword: !value "xlrelease_Release_jiraWebhooks_scriptUserPassword"
+        riskProfile: Default risk profile
+      - name: Jira trigger webhook
+        type: events.EventBasedTrigger
+        description: Sample for jira webhooks event trigger.
+        mappedProperties:
+          - type: xlrelease.StringValue
+            targetProperty: releaseTitle
+            value: Starting release from jira webhooks for ${event.issue.key}
+          - type: xlrelease.StringValue
+            targetProperty: variables[description]
+            value: ${event.issue.fields.issuetype.description}
+          - type: xlrelease.ListStringValue
+            targetProperty: tags
+            value:
+              - ${ event.issue.key}
+              - ${event.webhookEvent}
+              - ${event.timestamp}
+          - type: xlrelease.StringValue
+            targetProperty: variables[release_name]
+            value: ${event.issue.key}
+          - type: xlrelease.ListStringValue
+            targetProperty: variables[items]
+            value:
+              - ${event.changelog.items}
+          - type: xlrelease.StringValue
+            targetProperty: variables[project_name]
+            value: '{$event.issue.fields.project.name}'
+          - type: xlrelease.StringValue
+            targetProperty: template
+            value: jiraWebhooks
+        triggerActionType: xlrelease.CreateReleaseFromTemplateAction
+        eventSource: Jira Webhooks Endpoint
+        eventType: events.HttpRequestEvent
+        eventFilter:
+          type: events.ExpressionEventFilter
+          expressions:
+            - type: events.EventFilterExpressionItem
+              path: event.issue.fields.issuetype.name
+              operator: EQUALS
+              valueType: STRING
+              value: Epic
+            - type: events.EventFilterExpressionItem
+              path: event.issue.fields.resolution.name
+              operator: EQUALS
+              valueType: STRING
+              value: Done
