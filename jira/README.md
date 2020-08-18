@@ -19,7 +19,10 @@ Fill in other fields as needed.
 
 Select a filter rule from the drop down list in order to restrict events on which this trigger will fire.
 
-Example of a `Visual designer` filter: ![screenshot of Trigger Rules](screenshots/trigger_rules.png)
+Example of a `Visual designer` filter:   
+
+![screenshot of Trigger Rules](screenshots/trigger_rules.png)
+
 
 With this rule in place, the trigger will only fire when the issue type is `Epic` and `resolution` is `Done`.
 
