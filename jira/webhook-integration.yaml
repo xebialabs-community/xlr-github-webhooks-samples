@@ -4,6 +4,11 @@ kind: Templates
 spec:
   - directory: Webhook Samples
     children:
+      - name: Jira Webhooks Endpoint
+        type: events.PostWebhookEndpoint
+        path: test-jira
+        authentication:
+          type: events.NoAuthentication
       - template: jiraWebhooks
         scheduledStartDate: 2020-08-17T09:00:00-04:00
         phases:
@@ -29,7 +34,7 @@ spec:
             key: project_name
             requiresValue: false
         scriptUsername: admin
-        scriptUserPassword: !value "xlrelease_Release_jiraWebhooks_scriptUserPassword"
+        scriptUserPassword: admin
         riskProfile: Default risk profile
       - name: Jira trigger webhook
         type: events.EventBasedTrigger
@@ -63,16 +68,3 @@ spec:
         triggerActionType: xlrelease.CreateReleaseFromTemplateAction
         eventSource: Jira Webhooks Endpoint
         eventType: events.HttpRequestEvent
-        eventFilter:
-          type: events.ExpressionEventFilter
-          expressions:
-            - type: events.EventFilterExpressionItem
-              path: event.issue.fields.issuetype.name
-              operator: EQUALS
-              valueType: STRING
-              value: Epic
-            - type: events.EventFilterExpressionItem
-              path: event.issue.fields.resolution.name
-              operator: EQUALS
-              valueType: STRING
-              value: Done
