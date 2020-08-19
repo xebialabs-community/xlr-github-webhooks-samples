@@ -55,3 +55,6 @@ The sample here works in a Bitbucket environment configured with:
  * project *test-project*
 
 Look for those values in the YAML file and adjust according to your environment.
+
+###Creating Sample trigger using XLR UI
+![Sample trigger](./images/BitBucketSampleTrigger.png)
