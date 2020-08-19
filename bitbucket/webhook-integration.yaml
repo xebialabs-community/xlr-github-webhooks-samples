@@ -1,0 +1,136 @@
+---
+apiVersion: xl-release/v1
+kind: Templates
+spec:
+  - directory: Webhook Samples
+    children:
+      - name: Bitbucket Webhook Endpoint
+        type: events.PostWebhookEndpoint
+        path: bitbucket-sample-webhook
+        authentication:
+          type: events.NoAuthentication
+      - template: Webhook Sample Template
+        scheduledStartDate: 2020-08-23T09:00:00-04:00
+        dueDate: 2020-08-24T09:00:00-04:00
+        phases:
+          - phase: Demo
+            tasks:
+              - name: Display variables
+                type: xlrelease.ScriptTask
+                script: |-
+                  variables = releaseApi.getVariables(release.id)
+                  for var in variables:
+                     print(var.key + ': ' + str(var.value))
+            color: '#0079BC'
+        variables:
+          - type: xlrelease.StringVariable
+            key: repository_name
+            requiresValue: false
+          - type: xlrelease.StringVariable
+            key: branch_name
+            requiresValue: false
+          - type: xlrelease.StringVariable
+            key: pull_request_status
+            requiresValue: false
+          - type: xlrelease.StringVariable
+            key: pull_request_author
+            requiresValue: false
+          - type: xlrelease.StringVariable
+            key: pull_request_action
+            requiresValue: false
+          - type: xlrelease.StringVariable
+            key: pull_request_assignees
+            requiresValue: false
+          - type: xlrelease.ListStringVariable
+            key: pull_request_labels
+            requiresValue: false
+          - type: xlrelease.MapStringStringVariable
+            key: pull_request_map
+            requiresValue: false
+        scriptUsername: admin
+        scriptUserPassword: admin
+        riskProfile: Default risk profile
+      - name: Bitbucket Push Event Trigger
+        type: events.EventBasedTrigger
+        description: Triggers on push to xlr-webhooks-sample:master
+        mappedProperties:
+          - type: xlrelease.StringValue
+            targetProperty: releaseTitle
+            value: Build push - ${event.head_commit.message}
+          - type: xlrelease.StringValue
+            targetProperty: variables[repository_name]
+            value: ${event.repository.name}
+          - type: xlrelease.StringValue
+            targetProperty: variables[branch_name]
+            value: ${event.repository.default_branch}
+          - type: xlrelease.ListStringValue
+            targetProperty: tags
+            value:
+              - ${event.head_commit.timestamp}
+          - type: xlrelease.StringValue
+            targetProperty: template
+            value: Webhook Sample Template
+        triggerActionType: xlrelease.CreateReleaseFromTemplateAction
+        eventSource: Bitbucket Webhook Endpoint
+        eventType: events.HttpRequestEvent
+        eventFilter:
+          type: events.ExpressionEventFilter
+          expressions:
+            - type: events.EventFilterExpressionItem
+              path: headers.['X-Webhook-Event']
+              operator: EQUALS
+              valueType: STRING
+              value: push
+            - type: events.EventFilterExpressionItem
+              path: event.project.name
+              operator: EQUALS
+              valueType: STRING
+              value: "test-project"
+            - type: events.EventFilterExpressionItem
+              path: event.repository.name
+              operator: EQUALS
+              valueType: STRING
+              value: xlr-webhooks-samples
+      - name: Bitbucket Pull Request Event Trigger
+        type: events.EventBasedTrigger
+        description: Triggers on pull request with BUILD label opened onto xlr-webhooks-samples:master
+        mappedProperties:
+          - type: xlrelease.StringValue
+            targetProperty: releaseTitle
+            value: Build PR#${event.pull_request.number} - ${event.pull_request.title}
+          - type: xlrelease.StringValue
+            targetProperty: variables[repository_name]
+            value: ${event.repository.name}
+          - type: xlrelease.StringValue
+            targetProperty: variables[pull_request_action]
+            value: ${event.action}
+          - type: xlrelease.StringValue
+            targetProperty: variables[branch_name]
+            value: ${event.pull_request.head.ref}
+          - type: xlrelease.StringValue
+            targetProperty: variables[pull_request_status]
+            value: ${event.pull_request.state}
+          - type: xlrelease.StringValue
+            targetProperty: variables[pull_request_author]
+            value: ${event.sender.login}
+          - type: xlrelease.StringValue
+            targetProperty: variables[pull_request_assignees]
+            value: ${event.requested_reviewer.login}
+          - type: xlrelease.VariableValue
+            targetProperty: tags
+            variableKey: event.pull_request.labels..name
+          - type: xlrelease.VariableValue
+            targetProperty: variables[pull_request_map]
+            variableKey: event.pull_request
+          - type: xlrelease.VariableValue
+            targetProperty: variables[pull_request_labels]
+            variableKey: event.pull_request.labels..name
+          - type: xlrelease.StringValue
+            targetProperty: template
+            value: Webhook Sample Template
+        triggerActionType: xlrelease.CreateReleaseFromTemplateAction
+        eventSource: Bitbucket Webhook Endpoint
+        eventType: events.HttpRequestEvent
+        eventFilter:
+          type: events.GroovyEventFilter
+          expr: "event.pullrequest.type == \"pullrequest\" && event.pullrequest.destination.branch.name == \"master\" && event.repository.project.name == \"test-project\""
