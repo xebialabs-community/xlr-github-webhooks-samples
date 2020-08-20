@@ -1,0 +1,107 @@
+{
+  "object_kind": "push",
+  "event_name": "push",
+  "before": "4241537212597b3087b58845f6b03baaf1870352",
+  "after": "a7cc7139d1c5793a9c46f866b9a6c1877ced5527",
+  "ref": "refs/heads/master",
+  "checkout_sha": "a7cc7139d1c5793a9c46f866b9a6c1877ced5527",
+  "message": null,
+  "user_id": 1,
+  "user_name": "Administrator",
+  "user_username": "root",
+  "user_email": "",
+  "user_avatar": "https://www.gravatar.com/avatar/e64c7d89f26bd1972efa854d13d7dd61?s=80&d=identicon",
+  "project_id": 2,
+  "project": {
+    "id": 2,
+    "name": "xlr-webhooks-samples",
+    "description": "",
+    "web_url": "http://gitlab.example.com/sample-group/xlr-webhooks-samples",
+    "avatar_url": null,
+    "git_ssh_url": "git@gitlab.example.com:sample-group/xlr-webhooks-samples.git",
+    "git_http_url": "http://gitlab.example.com/sample-group/xlr-webhooks-samples.git",
+    "namespace": "sample-group",
+    "visibility_level": 20,
+    "path_with_namespace": "sample-group/xlr-webhooks-samples",
+    "default_branch": "master",
+    "ci_config_path": null,
+    "homepage": "http://gitlab.example.com/sample-group/xlr-webhooks-samples",
+    "url": "git@gitlab.example.com:sample-group/xlr-webhooks-samples.git",
+    "ssh_url": "git@gitlab.example.com:sample-group/xlr-webhooks-samples.git",
+    "http_url": "http://gitlab.example.com/sample-group/xlr-webhooks-samples.git"
+  },
+  "commits": [
+    {
+      "id": "30815882777e066948a7f67647a1e41de8e36b8e",
+      "message": "updating readme file\n",
+      "title": "updating readme file",
+      "timestamp": "2020-08-14T10:49:31-04:00",
+      "url": "http://gitlab.example.com/sample-group/xlr-webhooks-samples/-/commit/30815882777e066948a7f67647a1e41de8e36b8e",
+      "author": {
+        "name": "Sample User",
+        "email": "*********"
+      },
+      "added": [
+
+      ],
+      "modified": [
+        "README.md"
+      ],
+      "removed": [
+
+      ]
+    },
+    {
+      "id": "a810763cfd571a003e598df82620c97fc2cdc63d",
+      "message": "another update to readme\n",
+      "title": "another update to readme",
+      "timestamp": "2020-08-14T11:19:15-04:00",
+      "url": "http://gitlab.example.com/sample-group/xlr-webhooks-samples/-/commit/a810763cfd571a003e598df82620c97fc2cdc63d",
+      "author": {
+        "name": "Sample User",
+        "email": "*********"
+      },
+      "added": [
+
+      ],
+      "modified": [
+        "README.md"
+      ],
+      "removed": [
+
+      ]
+    },
+    {
+      "id": "a7cc7139d1c5793a9c46f866b9a6c1877ced5527",
+      "message": "Merge branch 'sample-branch' into 'master'\n\nupdating readme file\n\nSee merge request sample-group/xlr-webhooks-samples!1",
+      "title": "Merge branch 'sample-branch' into 'master'",
+      "timestamp": "2020-08-14T15:26:17+00:00",
+      "url": "http://gitlab.example.com/sample-group/xlr-webhooks-samples/-/commit/a7cc7139d1c5793a9c46f866b9a6c1877ced5527",
+      "author": {
+        "name": "Administrator",
+        "email": "admin@example.com"
+      },
+      "added": [
+
+      ],
+      "modified": [
+        "README.md"
+      ],
+      "removed": [
+
+      ]
+    }
+  ],
+  "total_commits_count": 3,
+  "push_options": {
+  },
+  "repository": {
+    "name": "xlr-webhooks-samples",
+    "url": "git@gitlab.example.com:sample-group/xlr-webhooks-samples.git",
+    "description": "",
+    "homepage": "http://gitlab.example.com/sample-group/xlr-webhooks-samples",
+    "git_http_url": "http://gitlab.example.com/sample-group/xlr-webhooks-samples.git",
+    "git_ssh_url": "git@gitlab.example.com:sample-group/xlr-webhooks-samples.git",
+    "visibility_level": 20
+  }
+}
