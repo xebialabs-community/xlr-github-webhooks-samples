@@ -9,7 +9,7 @@ spec:
         path: bitbucket-sample-webhook
         authentication:
           type: events.NoAuthentication
-      - template: Webhook Sample Template
+      - template: Bitbucket Sample Template
         scheduledStartDate: 2020-08-23T09:00:00-04:00
         dueDate: 2020-08-24T09:00:00-04:00
         phases:
@@ -56,20 +56,20 @@ spec:
         mappedProperties:
           - type: xlrelease.StringValue
             targetProperty: releaseTitle
-            value: Build push - ${event.head_commit.message}
+            value: Build push - ${event.push.changes[0].commits[0].message}
           - type: xlrelease.StringValue
             targetProperty: variables[repository_name]
             value: ${event.repository.name}
           - type: xlrelease.StringValue
             targetProperty: variables[branch_name]
-            value: ${event.repository.default_branch}
+            value: ${event.push.changes[0].old.name}
           - type: xlrelease.ListStringValue
             targetProperty: tags
             value:
-              - ${event.head_commit.timestamp}
+              - ${event.push.changes[0].commits[0].date}
           - type: xlrelease.StringValue
             targetProperty: template
-            value: Webhook Sample Template
+            value: Bitbucket Sample Template
         triggerActionType: xlrelease.CreateReleaseFromTemplateAction
         eventSource: Bitbucket Webhook Endpoint
         eventType: events.HttpRequestEvent
@@ -77,12 +77,12 @@ spec:
           type: events.ExpressionEventFilter
           expressions:
             - type: events.EventFilterExpressionItem
-              path: headers.['X-Webhook-Event']
+              path: headers.['X-Event-Key']
               operator: EQUALS
               valueType: STRING
-              value: push
+              value: repo:push
             - type: events.EventFilterExpressionItem
-              path: event.project.name
+              path: event.repository.project.name
               operator: EQUALS
               valueType: STRING
               value: "test-project"
@@ -90,7 +90,7 @@ spec:
               path: event.repository.name
               operator: EQUALS
               valueType: STRING
-              value: xlr-webhooks-samples
+              value: xlr-webhooks-sample
       - name: Bitbucket Pull Request Event Trigger
         type: events.EventBasedTrigger
         description: Triggers on pull request with BUILD label opened onto xlr-webhooks-samples:master
@@ -127,10 +127,10 @@ spec:
             variableKey: event.pull_request.labels..name
           - type: xlrelease.StringValue
             targetProperty: template
-            value: Webhook Sample Template
+            value: Bitbucket Sample Template
         triggerActionType: xlrelease.CreateReleaseFromTemplateAction
         eventSource: Bitbucket Webhook Endpoint
         eventType: events.HttpRequestEvent
         eventFilter:
           type: events.GroovyEventFilter
-          expr: "event.pullrequest.type == \"pullrequest\" && event.pullrequest.destination.branch.name == \"master\" && event.repository.project.name == \"test-project\""
+          expr: "headers.'X-Event-Key' == 'pullrequest:created' && event.pullrequest.destination.branch.name == 'master' && event.repository.project.name == 'test-project'"

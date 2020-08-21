@@ -7,9 +7,9 @@ in the main README file.
 
 After applying the YAML file you can test it using the `Test run` feature on the trigger configuration page.
 
-Pull request events can be tested using `pull_request.json`.
+Pull request events can be tested using `pull_request_event.json`.
 
-Push events can be tested using `push_request.json`.
+Push events can be tested using `push_event.json`.
 
 The sample YAML file will configure the following objects in Release under the *Webhook Samples* folder:
  - Single endpoint for all events from Bitbucket accessible from **http://&lt;xlr-address&gt;/webhooks/bitbucket-sample-webhook**
