@@ -6,7 +6,7 @@ spec:
     children:
       - name: Bitbucket Webhook Endpoint
         type: events.PostWebhookEndpoint
-        path: bitbucket-sample-webhook
+        path: bitbucket-sample-webhooks
         authentication:
           type: events.NoAuthentication
       - template: Bitbucket Sample Template
@@ -30,19 +30,13 @@ spec:
             key: branch_name
             requiresValue: false
           - type: xlrelease.StringVariable
-            key: pull_request_status
+            key: pull_request_state
             requiresValue: false
           - type: xlrelease.StringVariable
-            key: pull_request_author
+            key: request_author
             requiresValue: false
           - type: xlrelease.StringVariable
-            key: pull_request_action
-            requiresValue: false
-          - type: xlrelease.StringVariable
-            key: pull_request_assignees
-            requiresValue: false
-          - type: xlrelease.ListStringVariable
-            key: pull_request_labels
+            key: pull_request_task_count
             requiresValue: false
           - type: xlrelease.MapStringStringVariable
             key: pull_request_map
@@ -56,13 +50,16 @@ spec:
         mappedProperties:
           - type: xlrelease.StringValue
             targetProperty: releaseTitle
-            value: Build push - ${event.push.changes[0].commits[0].message}
+            value: New Release created from push - ${event.push.changes[0].commits[0].message}
           - type: xlrelease.StringValue
             targetProperty: variables[repository_name]
-            value: ${event.repository.name}
+            value: ${event.repository.full_name}
           - type: xlrelease.StringValue
             targetProperty: variables[branch_name]
             value: ${event.push.changes[0].old.name}
+          - type: xlrelease.StringValue
+            targetProperty: variables[request_author]
+            value: ${event.actor.display_name}
           - type: xlrelease.ListStringValue
             targetProperty: tags
             value:
@@ -93,38 +90,30 @@ spec:
               value: xlr-webhooks-sample
       - name: Bitbucket Pull Request Event Trigger
         type: events.EventBasedTrigger
-        description: Triggers on pull request with BUILD label opened onto xlr-webhooks-samples:master
+        description: Triggers on pull request opened onto xlr-webhooks-samples:master
         mappedProperties:
           - type: xlrelease.StringValue
             targetProperty: releaseTitle
-            value: Build PR#${event.pull_request.number} - ${event.pull_request.title}
+            value: New Release from pull request ${event.pullrequest.rendered.title.raw}
           - type: xlrelease.StringValue
             targetProperty: variables[repository_name]
-            value: ${event.repository.name}
-          - type: xlrelease.StringValue
-            targetProperty: variables[pull_request_action]
-            value: ${event.action}
+            value: ${event.repository.full_name}
           - type: xlrelease.StringValue
             targetProperty: variables[branch_name]
-            value: ${event.pull_request.head.ref}
+            value: ${event.pullrequest.source.branch.name}
           - type: xlrelease.StringValue
-            targetProperty: variables[pull_request_status]
-            value: ${event.pull_request.state}
+            targetProperty: variables[pull_request_state]
+            value: ${event.pullrequest.state}
           - type: xlrelease.StringValue
-            targetProperty: variables[pull_request_author]
-            value: ${event.sender.login}
+            targetProperty: variables[request_author]
+            value: ${event.pullrequest.author.display_name}
           - type: xlrelease.StringValue
-            targetProperty: variables[pull_request_assignees]
-            value: ${event.requested_reviewer.login}
-          - type: xlrelease.VariableValue
+            targetProperty: variables[pull_request_task_count]
+            value: ${event.pullrequest.task_count}
+          - type: xlrelease.ListStringValue
             targetProperty: tags
-            variableKey: event.pull_request.labels..name
-          - type: xlrelease.VariableValue
-            targetProperty: variables[pull_request_map]
-            variableKey: event.pull_request
-          - type: xlrelease.VariableValue
-            targetProperty: variables[pull_request_labels]
-            variableKey: event.pull_request.labels..name
+            value:
+              - ${event.pullrequest.updated_on}
           - type: xlrelease.StringValue
             targetProperty: template
             value: Bitbucket Sample Template
