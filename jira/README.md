@@ -84,5 +84,5 @@ Fields from the incoming JSON event and Release variables can be mapped directly
 
 After the trigger has fired and the release was created, the properties and variables of the release will contain the data from the incoming Jira event: 
 
-![screenshot of TemplateAfterRelease](screenshots/release_complete.png)
+![screenshot of TemplateAfterRelease](screenshots/post_release.png)
 
