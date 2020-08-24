@@ -54,7 +54,7 @@ spec:
         mappedProperties:
           - type: xlrelease.StringValue
             targetProperty: releaseTitle
-            value: Build push - ${event.commits[-1:].title}
+            value: Build GitLab Push - ${event.commits[-1:].title}
           - type: xlrelease.StringValue
             targetProperty: variables[repository_name]
             value: ${event.repository.name}
@@ -95,7 +95,7 @@ spec:
         mappedProperties:
           - type: xlrelease.StringValue
             targetProperty: releaseTitle
-            value: Build MR#${event.object_attributes.id} - ${event.object_attributes.title}
+            value: Build GitLab MR#${event.object_attributes.id} - ${event.object_attributes.title}
           - type: xlrelease.StringValue
             targetProperty: variables[repository_name]
             value: ${event.repository.name}

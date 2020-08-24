@@ -6,7 +6,7 @@ spec:
     children:
       - name: Bitbucket Webhook Endpoint
         type: events.PostWebhookEndpoint
-        path: bitbucket-sample-webhooks
+        path: bitbucket-sample-webhook
         authentication:
           type: events.NoAuthentication
       - template: Bitbucket Sample Template
@@ -50,7 +50,7 @@ spec:
         mappedProperties:
           - type: xlrelease.StringValue
             targetProperty: releaseTitle
-            value: New Release created from push - ${event.push.changes[0].commits[0].message}
+            value: Build Bitbucket Push - ${event.push.changes[0].commits[0].message}
           - type: xlrelease.StringValue
             targetProperty: variables[repository_name]
             value: ${event.repository.full_name}
@@ -94,7 +94,7 @@ spec:
         mappedProperties:
           - type: xlrelease.StringValue
             targetProperty: releaseTitle
-            value: New Release from pull request ${event.pullrequest.rendered.title.raw}
+            value: Build Bitbucket PR#${event.pullrequest.id} - ${event.pullrequest.rendered.title.raw}
           - type: xlrelease.StringValue
             targetProperty: variables[repository_name]
             value: ${event.repository.full_name}
@@ -114,6 +114,9 @@ spec:
             targetProperty: tags
             value:
               - ${event.pullrequest.updated_on}
+          - type: xlrelease.VariableValue
+            targetProperty: variables[pull_request_map]
+            variableKey: event.pullrequest
           - type: xlrelease.StringValue
             targetProperty: template
             value: Bitbucket Sample Template
