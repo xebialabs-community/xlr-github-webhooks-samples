@@ -79,7 +79,7 @@ Example Jira `Epic` event which would satisfy the filter rule:
 
 Fields from the incoming JSON event and Release variables can be mapped directly to release properties like:
 
-![screenshot of ReleaseformTemplate](screenshots/release_prop.png)
+![screenshot of ReleaseformTemplate](screenshots/release_properties.png)
 
 
 After the trigger has fired and the release was created, the properties and variables of the release will contain the data from the incoming Jira event: 
