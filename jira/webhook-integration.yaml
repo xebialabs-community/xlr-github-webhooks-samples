@@ -61,7 +61,7 @@ spec:
               - ${event.changelog.items}
           - type: xlrelease.StringValue
             targetProperty: variables[project_name]
-            value: '{$event.issue.fields.project.name}'
+            value: ${event.issue.fields.project.name}
           - type: xlrelease.StringValue
             targetProperty: template
             value: jiraWebhooks
