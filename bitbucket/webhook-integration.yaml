@@ -4,12 +4,14 @@ kind: Templates
 spec:
   - directory: Webhook Samples
     children:
-      - name: GitLab Webhook Endpoint
+      - name: Bitbucket Webhook Endpoint
         type: events.PostWebhookEndpoint
-        path: gitlab-sample-webhook
+        path: bitbucket-sample-webhook
         authentication:
           type: events.NoAuthentication
-      - template: GitLab Sample Template
+      - template: Bitbucket Sample Template
+        scheduledStartDate: 2020-08-23T09:00:00-04:00
+        dueDate: 2020-08-24T09:00:00-04:00
         phases:
           - phase: Demo
             tasks:
@@ -28,111 +30,99 @@ spec:
             key: branch_name
             requiresValue: false
           - type: xlrelease.StringVariable
-            key: merge_request_status
+            key: pull_request_state
             requiresValue: false
           - type: xlrelease.StringVariable
-            key: merge_request_author
+            key: request_author
             requiresValue: false
           - type: xlrelease.StringVariable
-            key: merge_request_action
-            requiresValue: false
-          - type: xlrelease.StringVariable
-            key: merge_request_assignees
-            requiresValue: false
-          - type: xlrelease.ListStringVariable
-            key: merge_request_labels
+            key: pull_request_task_count
             requiresValue: false
           - type: xlrelease.MapStringStringVariable
-            key: merge_request_map
+            key: pull_request_map
             requiresValue: false
         scriptUsername: admin
         scriptUserPassword: admin
         riskProfile: Default risk profile
-      - name: GitLab Push Event Trigger
+      - name: Bitbucket Push Event Trigger
         type: events.EventBasedTrigger
-        description: Triggers on push to xlr-webhooks-samples:master
+        description: Triggers on push to xlr-webhooks-sample:master
         mappedProperties:
           - type: xlrelease.StringValue
             targetProperty: releaseTitle
-            value: Build GitLab Push - ${event.commits[-1:].title}
+            value: Build Bitbucket Push - ${event.push.changes[0].commits[0].message}
           - type: xlrelease.StringValue
             targetProperty: variables[repository_name]
-            value: ${event.repository.name}
+            value: ${event.repository.full_name}
           - type: xlrelease.StringValue
             targetProperty: variables[branch_name]
-            value: ${event.project.default_branch}
+            value: ${event.push.changes[0].old.name}
+          - type: xlrelease.StringValue
+            targetProperty: variables[request_author]
+            value: ${event.actor.display_name}
           - type: xlrelease.ListStringValue
             targetProperty: tags
             value:
-              - ${event.commits[-1:].timestamp}
+              - ${event.push.changes[0].commits[0].date}
           - type: xlrelease.StringValue
             targetProperty: template
-            value: GitLab Sample Template
+            value: Bitbucket Sample Template
         triggerActionType: xlrelease.CreateReleaseFromTemplateAction
-        eventSource: GitLab Webhook Endpoint
+        eventSource: Bitbucket Webhook Endpoint
         eventType: events.HttpRequestEvent
         eventFilter:
           type: events.ExpressionEventFilter
           expressions:
             - type: events.EventFilterExpressionItem
-              path: headers.['X-Gitlab-Event']
+              path: headers.['X-Event-Key']
               operator: EQUALS
               valueType: STRING
-              value: Push Hook
+              value: repo:push
             - type: events.EventFilterExpressionItem
-              path: event.ref
-              operator: INCLUDES
+              path: event.repository.project.name
+              operator: EQUALS
               valueType: STRING
-              value: master
+              value: "test-project"
             - type: events.EventFilterExpressionItem
               path: event.repository.name
               operator: EQUALS
               valueType: STRING
-              value: xlr-webhooks-samples
-      - name: GitLab Merge Request Event Trigger
+              value: xlr-webhooks-sample
+      - name: Bitbucket Pull Request Event Trigger
         type: events.EventBasedTrigger
-        description: Triggers when a merge request, with BUILD label and merging into xlr-webhooks-samples:master, is opened or a commit has been added.
+        description: Triggers on pull request opened onto xlr-webhooks-samples:master
         mappedProperties:
           - type: xlrelease.StringValue
             targetProperty: releaseTitle
-            value: Build GitLab MR#${event.object_attributes.id} - ${event.object_attributes.title}
+            value: Build Bitbucket PR#${event.pullrequest.id} - ${event.pullrequest.rendered.title.raw}
           - type: xlrelease.StringValue
             targetProperty: variables[repository_name]
-            value: ${event.repository.name}
-          - type: xlrelease.StringValue
-            targetProperty: variables[merge_request_action]
-            value: ${event.object_attributes.action}
+            value: ${event.repository.full_name}
           - type: xlrelease.StringValue
             targetProperty: variables[branch_name]
-            value: ${event.object_attributes.source_branch}
+            value: ${event.pullrequest.source.branch.name}
           - type: xlrelease.StringValue
-            targetProperty: variables[merge_request_status]
-            value: ${event.object_attributes.state}
+            targetProperty: variables[pull_request_state]
+            value: ${event.pullrequest.state}
           - type: xlrelease.StringValue
-            targetProperty: variables[merge_request_author]
-            value: ${event.user.name}
+            targetProperty: variables[request_author]
+            value: ${event.pullrequest.author.display_name}
           - type: xlrelease.StringValue
-            targetProperty: variables[merge_request_assignees]
-            value: ${event.assignees..name}
-          - type: xlrelease.VariableValue
+            targetProperty: variables[pull_request_task_count]
+            value: ${event.pullrequest.task_count}
+          - type: xlrelease.ListStringValue
             targetProperty: tags
-            variableKey: event.labels..title
+            value:
+              - ${event.pullrequest.updated_on}
           - type: xlrelease.VariableValue
-            targetProperty: variables[merge_request_map]
-            variableKey: event.object_attributes
-          - type: xlrelease.VariableValue
-            targetProperty: variables[merge_request_labels]
-            variableKey: event.labels..title
+            targetProperty: variables[pull_request_map]
+            variableKey: event.pullrequest
           - type: xlrelease.StringValue
             targetProperty: template
-            value: GitLab Sample Template
+            value: Bitbucket Sample Template
         triggerActionType: xlrelease.CreateReleaseFromTemplateAction
-        eventSource: GitLab Webhook Endpoint
+        eventSource: Bitbucket Webhook Endpoint
         eventType: events.HttpRequestEvent
         eventFilter:
           type: events.GroovyEventFilter
-          expr: "headers.'X-Gitlab-Event' == 'Merge Request Hook' && \n\
-                (event.object_attributes.action in ['opened', 'reopened'] || (event.object_attributes.action == 'update' && event.object_attributes.oldrev != null)) && \n\
-                event.labels.title.contains('BUILD') && \n\
-                event.object_attributes.target_branch == 'master' && \n\
-                event.repository.name == 'xlr-webhooks-samples'"
+          expr: "headers.'X-Event-Key' == 'pullrequest:created' && event.pullrequest.destination.branch.name == 'master' && event.repository.project.name == 'test-project'"

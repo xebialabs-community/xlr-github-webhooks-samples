@@ -55,7 +55,7 @@ spec:
         mappedProperties:
           - type: xlrelease.StringValue
             targetProperty: releaseTitle
-            value: Build push - ${event.head_commit.message}
+            value: Build Github Push - ${event.head_commit.message}
           - type: xlrelease.StringValue
             targetProperty: variables[repository_name]
             value: ${event.repository.name}
@@ -96,7 +96,7 @@ spec:
         mappedProperties:
           - type: xlrelease.StringValue
             targetProperty: releaseTitle
-            value: Build PR#${event.pull_request.number} - ${event.pull_request.title}
+            value: Build Github PR#${event.pull_request.number} - ${event.pull_request.title}
           - type: xlrelease.StringValue
             targetProperty: variables[repository_name]
             value: ${event.repository.name}
@@ -132,6 +132,6 @@ spec:
         eventType: events.HttpRequestEvent
         eventFilter:
           type: events.GroovyEventFilter
-          expr: "headers.'X-GitHub-Event' == 'pull_request' && \nevent.action in [\"opened\",\"reopened\",\"syncronized\"] &&\nevent.pull_request.labels.name.contains(\"\
-        BUILD\") && \nevent.pull_request.base.ref == \"master\" &&\nevent.repository.name\
-        \ == \"xlr-webhooks-samples\""
+          expr: "headers.'X-GitHub-Event' == 'pull_request' && \nevent.action in ['opened','reopened','syncronized'] &&\nevent.pull_request.labels.name.contains('\
+        BUILD') && \nevent.pull_request.base.ref == 'master' &&\nevent.repository.name\
+        \ == 'xlr-webhooks-samples'"
