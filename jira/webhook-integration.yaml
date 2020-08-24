@@ -11,6 +11,7 @@ spec:
           type: events.NoAuthentication
       - template: jiraWebhooks
         scheduledStartDate: 2020-08-17T09:00:00-04:00
+        dueDate: 2020-08-24T09:23:44.851-04:00
         phases:
           - phase: New Phase
             tasks:
@@ -68,3 +69,16 @@ spec:
         triggerActionType: xlrelease.CreateReleaseFromTemplateAction
         eventSource: Jira Webhooks Endpoint
         eventType: events.HttpRequestEvent
+        eventFilter:
+          type: events.ExpressionEventFilter
+          expressions:
+            - type: events.EventFilterExpressionItem
+              path: event.issue.fields.issuetype.name
+              operator: EQUALS
+              valueType: STRING
+              value: Epic
+            - type: events.EventFilterExpressionItem
+              path: event.issue.fields.resolution.name
+              operator: EQUALS
+              valueType: STRING
+              value: Done
