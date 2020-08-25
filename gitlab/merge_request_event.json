@@ -1,0 +1,149 @@
+{
+  "object_kind": "merge_request",
+  "event_type": "merge_request",
+  "user": {
+    "name": "Administrator",
+    "username": "root",
+    "avatar_url": "https://www.gravatar.com/avatar/e64c7d89f26bd1972efa854d13d7dd61?s=80&d=identicon",
+    "email": "admin@example.com"
+  },
+  "project": {
+    "id": 2,
+    "name": "xlr-webhooks-samples",
+    "description": "",
+    "web_url": "http://gitlab.example.com/sample-group/xlr-webhooks-samples",
+    "avatar_url": null,
+    "git_ssh_url": "git@gitlab.example.com:sample-group/xlr-webhooks-samples.git",
+    "git_http_url": "http://gitlab.example.com/sample-group/xlr-webhooks-samples.git",
+    "namespace": "sample-group",
+    "visibility_level": 20,
+    "path_with_namespace": "sample-group/xlr-webhooks-samples",
+    "default_branch": "master",
+    "ci_config_path": null,
+    "homepage": "http://gitlab.example.com/sample-group/xlr-webhooks-samples",
+    "url": "git@gitlab.example.com:sample-group/xlr-webhooks-samples.git",
+    "ssh_url": "git@gitlab.example.com:sample-group/xlr-webhooks-samples.git",
+    "http_url": "http://gitlab.example.com/sample-group/xlr-webhooks-samples.git"
+  },
+  "object_attributes": {
+    "assignee_id": 2,
+    "author_id": 2,
+    "created_at": "2020-08-14 15:02:50 UTC",
+    "description": "Make an update to the readme for the repo",
+    "head_pipeline_id": null,
+    "id": 3,
+    "iid": 1,
+    "last_edited_at": null,
+    "last_edited_by_id": null,
+    "merge_commit_sha": null,
+    "merge_error": null,
+    "merge_params": {
+      "force_remove_source_branch": "0"
+    },
+    "merge_status": "unchecked",
+    "merge_user_id": null,
+    "merge_when_pipeline_succeeds": false,
+    "milestone_id": null,
+    "source_branch": "sample-branch",
+    "source_project_id": 2,
+    "state_id": 1,
+    "target_branch": "master",
+    "target_project_id": 2,
+    "time_estimate": 0,
+    "title": "updating readme file",
+    "updated_at": "2020-08-14 15:19:49 UTC",
+    "updated_by_id": 1,
+    "url": "http://gitlab.example.com/sample-group/xlr-webhooks-samples/-/merge_requests/1",
+    "source": {
+      "id": 2,
+      "name": "xlr-webhooks-samples",
+      "description": "",
+      "web_url": "http://gitlab.example.com/sample-group/xlr-webhooks-samples",
+      "avatar_url": null,
+      "git_ssh_url": "git@gitlab.example.com:sample-group/xlr-webhooks-samples.git",
+      "git_http_url": "http://gitlab.example.com/sample-group/xlr-webhooks-samples.git",
+      "namespace": "sample-group",
+      "visibility_level": 20,
+      "path_with_namespace": "sample-group/xlr-webhooks-samples",
+      "default_branch": "master",
+      "ci_config_path": null,
+      "homepage": "http://gitlab.example.com/sample-group/xlr-webhooks-samples",
+      "url": "git@gitlab.example.com:sample-group/xlr-webhooks-samples.git",
+      "ssh_url": "git@gitlab.example.com:sample-group/xlr-webhooks-samples.git",
+      "http_url": "http://gitlab.example.com/sample-group/xlr-webhooks-samples.git"
+    },
+    "target": {
+      "id": 2,
+      "name": "xlr-webhooks-samples",
+      "description": "",
+      "web_url": "http://gitlab.example.com/sample-group/xlr-webhooks-samples",
+      "avatar_url": null,
+      "git_ssh_url": "git@gitlab.example.com:sample-group/xlr-webhooks-samples.git",
+      "git_http_url": "http://gitlab.example.com/sample-group/xlr-webhooks-samples.git",
+      "namespace": "sample-group",
+      "visibility_level": 20,
+      "path_with_namespace": "sample-group/xlr-webhooks-samples",
+      "default_branch": "master",
+      "ci_config_path": null,
+      "homepage": "http://gitlab.example.com/sample-group/xlr-webhooks-samples",
+      "url": "git@gitlab.example.com:sample-group/xlr-webhooks-samples.git",
+      "ssh_url": "git@gitlab.example.com:sample-group/xlr-webhooks-samples.git",
+      "http_url": "http://gitlab.example.com/sample-group/xlr-webhooks-samples.git"
+    },
+    "last_commit": {
+      "id": "a810763cfd571a003e598df82620c97fc2cdc63d",
+      "message": "another update to readme\n",
+      "title": "another update to readme",
+      "timestamp": "2020-08-14T11:19:15-04:00",
+      "url": "http://gitlab.example.com/sample-group/xlr-webhooks-samples/-/commit/a810763cfd571a003e598df82620c97fc2cdc63d",
+      "author": {
+        "name": "Sample User",
+        "email": "*********"
+      }
+    },
+    "work_in_progress": false,
+    "total_time_spent": 0,
+    "human_total_time_spent": null,
+    "human_time_estimate": null,
+    "assignee_ids": [
+      2
+    ],
+    "state": "opened",
+    "action": "update",
+    "oldrev": "30815882777e066948a7f67647a1e41de8e36b8e"
+  },
+  "labels": [
+    {
+      "id": 2,
+      "title": "BUILD",
+      "color": "#0033CC",
+      "project_id": 2,
+      "created_at": "2020-08-14 15:06:51 UTC",
+      "updated_at": "2020-08-14 15:06:51 UTC",
+      "template": false,
+      "description": null,
+      "type": "ProjectLabel",
+      "group_id": null
+    }
+  ],
+  "changes": {
+    "updated_at": {
+      "previous": "2020-08-14 15:07:01 UTC",
+      "current": "2020-08-14 15:19:49 UTC"
+    }
+  },
+  "repository": {
+    "name": "xlr-webhooks-samples",
+    "url": "git@gitlab.example.com:sample-group/xlr-webhooks-samples.git",
+    "description": "",
+    "homepage": "http://gitlab.example.com/sample-group/xlr-webhooks-samples"
+  },
+  "assignees": [
+    {
+      "name": "Sample User",
+      "username": "sampleuser",
+      "avatar_url": "https://www.gravatar.com/avatar/4da74c6077f29c54d9adc053f9b10f28?s=80&d=identicon",
+      "email": "*********"
+    }
+  ]
+}
