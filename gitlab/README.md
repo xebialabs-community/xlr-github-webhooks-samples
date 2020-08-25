@@ -27,7 +27,7 @@ The sample YAML file will configure the following objects in Release under the *
  - Template that both triggers use to create releases with a number of release variables that will be populated by the
    triggers
 
-## Configure GitLab to send webhook events to Digitial.AI Release
+## Configure GitLab to send webhook events to Digital.AI Release
 
 In GitLab go to the repository you want to enable the webhook events for and navigate to Settings > Webhooks.
 

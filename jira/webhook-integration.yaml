@@ -1,0 +1,83 @@
+---
+apiVersion: xl-release/v1
+kind: Templates
+spec:
+  - directory: Webhook Samples
+    children:
+      - name: Jira Webhook Endpoint
+        type: events.PostWebhookEndpoint
+        path: jira-sample-webhook
+        authentication:
+          type: events.NoAuthentication
+      - template: Jira Sample Template
+        phases:
+          - phase: Demo
+            tasks:
+              - name: Display variables
+                type: xlrelease.ScriptTask
+                script: |-
+                  variables = releaseApi.getVariables(release.id)
+                  for var in variables:
+                     print(var.key + ': ' + str(var.value))
+        variables:
+          - type: xlrelease.StringVariable
+            key: epic_key
+          - type: xlrelease.StringVariable
+            key: description
+            requiresValue: false
+          - type: xlrelease.DateVariable
+            key: resolution_date
+          - type: xlrelease.StringVariable
+            key: project_name
+        scriptUsername: admin
+        scriptUserPassword: admin
+        riskProfile: Default risk profile
+      - name: Jira Epic Trigger
+        type: events.EventBasedTrigger
+        description: Triggers on JIRA Epic being resolved as Done.
+        mappedProperties:
+          - type: xlrelease.StringValue
+            targetProperty: releaseTitle
+            value: Release epic ${event.issue.key} - ${event.issue.fields.summary}
+          - type: xlrelease.StringValue
+            targetProperty: variables[description]
+            value: ${event.issue.fields.issuetype.description}
+          - type: xlrelease.ListStringValue
+            targetProperty: tags
+            value:
+              - ${event.issue.key}
+              - ${event.webhookEvent}
+              - ${event.timestamp}
+          - type: xlrelease.StringValue
+            targetProperty: variables[epic_key]
+            value: ${event.issue.key}
+          - type: xlrelease.VariableValue
+            targetProperty: variables[resolution_date]
+            variableKey: event.timestamp
+          - type: xlrelease.StringValue
+            targetProperty: variables[project_name]
+            value: ${event.issue.fields.project.name}
+          - type: xlrelease.StringValue
+            targetProperty: template
+            value: Jira Sample Template
+        triggerActionType: xlrelease.CreateReleaseFromTemplateAction
+        eventSource: Jira Webhook Endpoint
+        eventType: events.HttpRequestEvent
+        eventFilter:
+          type: events.ExpressionEventFilter
+          expressions:
+            - type: events.EventFilterExpressionItem
+              path: event.issue.fields.issuetype.name
+              operator: EQUALS
+              valueType: STRING
+              value: Epic
+            - type: events.EventFilterExpressionItem
+              path: event.issue.fields.resolutiondate
+              operator: IS_DEFINED
+              valueType: OBJECT
+              value: true
+            - type: events.EventFilterExpressionItem
+              path: event.issue.fields.resolution.name
+              operator: EQUALS
+              valueType: STRING
+              value: Done
