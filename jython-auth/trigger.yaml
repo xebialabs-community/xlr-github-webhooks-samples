@@ -1,0 +1,251 @@
+---
+apiVersion: xl-release/v1
+kind: Templates
+spec:
+- directory: Webhook Samples
+  children:
+  - name: GitLab Push Event Trigger
+    type: events.EventBasedTrigger
+    description: Triggers on push to xlr-webhooks-samples:master
+    mappedProperties:
+    - type: xlrelease.StringValue
+      targetProperty: releaseTitle
+      value: Build GitLab Push - ${event.commits[-1:].title}
+    - type: xlrelease.StringValue
+      targetProperty: variables[repository_name]
+      value: ${event.repository.name}
+    - type: xlrelease.StringValue
+      targetProperty: variables[branch_name]
+      value: ${event.project.default_branch}
+    - type: xlrelease.ListStringValue
+      targetProperty: tags
+      value:
+      - ${event.commits[-1:].timestamp}
+    - type: xlrelease.StringValue
+      targetProperty: template
+      value: GitLab Sample Template
+    triggerActionType: xlrelease.CreateReleaseFromTemplateAction
+    eventSource: GitLab Webhook Endpoint
+    eventType: events.HttpRequestEvent
+    eventFilter:
+      type: events.ExpressionEventFilter
+      expressions:
+      - type: events.EventFilterExpressionItem
+        path: headers.['X-Gitlab-Event']
+        operator: EQUALS
+        valueType: STRING
+        value: Push Hook
+      - type: events.EventFilterExpressionItem
+        path: event.ref
+        operator: INCLUDES
+        valueType: STRING
+        value: master
+      - type: events.EventFilterExpressionItem
+        path: event.repository.name
+        operator: EQUALS
+        valueType: STRING
+        value: xlr-webhooks-samples
+  - name: GitLab Merge Request Event Trigger
+    type: events.EventBasedTrigger
+    description: Triggers when a merge request, with BUILD label and merging into
+      xlr-webhooks-samples:master, is opened or a commit has been added.
+    mappedProperties:
+    - type: xlrelease.StringValue
+      targetProperty: releaseTitle
+      value: Build GitLab MR#${event.object_attributes.id} - ${event.object_attributes.title}
+    - type: xlrelease.StringValue
+      targetProperty: variables[repository_name]
+      value: ${event.repository.name}
+    - type: xlrelease.StringValue
+      targetProperty: variables[merge_request_action]
+      value: ${event.object_attributes.action}
+    - type: xlrelease.StringValue
+      targetProperty: variables[branch_name]
+      value: ${event.object_attributes.source_branch}
+    - type: xlrelease.StringValue
+      targetProperty: variables[merge_request_status]
+      value: ${event.object_attributes.state}
+    - type: xlrelease.StringValue
+      targetProperty: variables[merge_request_author]
+      value: ${event.user.name}
+    - type: xlrelease.StringValue
+      targetProperty: variables[merge_request_assignees]
+      value: ${event.assignees..name}
+    - type: xlrelease.VariableValue
+      targetProperty: tags
+      variableKey: event.labels..title
+    - type: xlrelease.VariableValue
+      targetProperty: variables[merge_request_map]
+      variableKey: event.object_attributes
+    - type: xlrelease.VariableValue
+      targetProperty: variables[merge_request_labels]
+      variableKey: event.labels..title
+    - type: xlrelease.StringValue
+      targetProperty: template
+      value: GitLab Sample Template
+    triggerActionType: xlrelease.CreateReleaseFromTemplateAction
+    eventSource: GitLab Webhook Endpoint
+    eventType: events.HttpRequestEvent
+    eventFilter:
+      type: events.GroovyEventFilter
+      expr: "headers.'X-Gitlab-Event' == 'Merge Request Hook' && \n(event.object_attributes.action\
+        \ in ['opened', 'reopened'] || (event.object_attributes.action == 'update'\
+        \ && event.object_attributes.oldrev != null)) && \nevent.labels.title.contains('BUILD')\
+        \ && \nevent.object_attributes.target_branch == 'master' && \nevent.repository.name\
+        \ == 'xlr-webhooks-samples'"
+  - name: Github Push Event Trigger
+    type: events.EventBasedTrigger
+    description: Triggers on push to xlr-webhooks-samples:master
+    mappedProperties:
+    - type: xlrelease.StringValue
+      targetProperty: releaseTitle
+      value: Build Github Push - ${event.head_commit.message}
+    - type: xlrelease.StringValue
+      targetProperty: variables[repository_name]
+      value: ${event.repository.name}
+    - type: xlrelease.StringValue
+      targetProperty: variables[branch_name]
+      value: ${event.repository.default_branch}
+    - type: xlrelease.ListStringValue
+      targetProperty: tags
+      value:
+      - ${event.head_commit.timestamp}
+    - type: xlrelease.StringValue
+      targetProperty: template
+      value: Github Sample Template
+    triggerActionType: xlrelease.CreateReleaseFromTemplateAction
+    eventSource: Github Webhook Endpoint
+    eventType: events.HttpRequestEvent
+    eventFilter:
+      type: events.ExpressionEventFilter
+      expressions:
+      - type: events.EventFilterExpressionItem
+        path: headers.['X-GitHub-Event']
+        operator: EQUALS
+        valueType: STRING
+        value: push
+      - type: events.EventFilterExpressionItem
+        path: event.ref
+        operator: INCLUDES
+        valueType: STRING
+        value: master
+      - type: events.EventFilterExpressionItem
+        path: event.repository.name
+        operator: EQUALS
+        valueType: STRING
+        value: xlr-webhooks-samples
+  - name: Github Pull Request Event Trigger
+    type: events.EventBasedTrigger
+    description: Triggers on pull request with BUILD label opened onto xlr-webhooks-samples:master
+    mappedProperties:
+    - type: xlrelease.StringValue
+      targetProperty: releaseTitle
+      value: Build Github PR#${event.pull_request.number} - ${event.pull_request.title}
+    - type: xlrelease.StringValue
+      targetProperty: variables[repository_name]
+      value: ${event.repository.name}
+    - type: xlrelease.StringValue
+      targetProperty: variables[pull_request_action]
+      value: ${event.action}
+    - type: xlrelease.StringValue
+      targetProperty: variables[branch_name]
+      value: ${event.pull_request.head.ref}
+    - type: xlrelease.StringValue
+      targetProperty: variables[pull_request_status]
+      value: ${event.pull_request.state}
+    - type: xlrelease.StringValue
+      targetProperty: variables[pull_request_author]
+      value: ${event.sender.login}
+    - type: xlrelease.StringValue
+      targetProperty: variables[pull_request_assignees]
+      value: ${event.requested_reviewer.login}
+    - type: xlrelease.VariableValue
+      targetProperty: tags
+      variableKey: event.pull_request.labels..name
+    - type: xlrelease.VariableValue
+      targetProperty: variables[pull_request_map]
+      variableKey: event.pull_request
+    - type: xlrelease.VariableValue
+      targetProperty: variables[pull_request_labels]
+      variableKey: event.pull_request.labels..name
+    - type: xlrelease.StringValue
+      targetProperty: template
+      value: Github Sample Template
+    triggerActionType: xlrelease.CreateReleaseFromTemplateAction
+    eventSource: Github Webhook Endpoint
+    eventType: events.HttpRequestEvent
+    eventFilter:
+      type: events.GroovyEventFilter
+      expr: "headers.'X-GitHub-Event' == 'pull_request' && \nevent.action in ['opened','reopened','syncronized']\
+        \ &&\nevent.pull_request.labels.name.contains('BUILD') && \nevent.pull_request.base.ref\
+        \ == 'master' &&\nevent.repository.name == 'xlr-webhooks-samples'"
+  - name: Jira Epic Trigger
+    type: events.EventBasedTrigger
+    description: Triggers on JIRA Epic being resolved as Done.
+    mappedProperties:
+    - type: xlrelease.StringValue
+      targetProperty: releaseTitle
+      value: Release epic ${event.issue.key} - ${event.issue.fields.summary}
+    - type: xlrelease.StringValue
+      targetProperty: variables[description]
+      value: ${event.issue.fields.issuetype.description}
+    - type: xlrelease.ListStringValue
+      targetProperty: tags
+      value:
+      - ${event.issue.key}
+      - ${event.webhookEvent}
+      - ${event.timestamp}
+    - type: xlrelease.StringValue
+      targetProperty: variables[epic_key]
+      value: ${event.issue.key}
+    - type: xlrelease.VariableValue
+      targetProperty: variables[resolution_date]
+      variableKey: event.timestamp
+    - type: xlrelease.StringValue
+      targetProperty: variables[project_name]
+      value: ${event.issue.fields.project.name}
+    - type: xlrelease.StringValue
+      targetProperty: template
+      value: Jira Sample Template
+    triggerActionType: xlrelease.CreateReleaseFromTemplateAction
+    eventSource: Jira Webhook Endpoint
+    eventType: events.HttpRequestEvent
+    eventFilter:
+      type: events.ExpressionEventFilter
+      expressions:
+      - type: events.EventFilterExpressionItem
+        path: event.issue.fields.issuetype.name
+        operator: EQUALS
+        valueType: STRING
+        value: Epic
+      - type: events.EventFilterExpressionItem
+        path: event.issue.fields.resolutiondate
+        operator: IS_DEFINED
+        valueType: OBJECT
+        value: "true"
+      - type: events.EventFilterExpressionItem
+        path: event.issue.fields.resolution.name
+        operator: EQUALS
+        valueType: STRING
+        value: Done
+
+  - name: jython-trigger
+    type: events.EventBasedTrigger
+    mappedProperties:
+    - type: xlrelease.ListStringValue
+      targetProperty: tags
+    - type: xlrelease.VariableValue
+      targetProperty: variables[branch_name]
+      variableKey: event.project.default_branch
+    - type: xlrelease.VariableValue
+      targetProperty: variables[repository_name]
+      variableKey: event.repository.name
+    - type: xlrelease.VariableValue
+      targetProperty: releaseTitle
+      variableKey: event.repository.name
+    - type: xlrelease.StringValue
+      targetProperty: template
+      value: Github Sample Template
+    triggerActionType: xlrelease.CreateReleaseFromTemplateAction
+    eventSource: Post-jython-authOLD
+    eventType: events.HttpRequestEvent

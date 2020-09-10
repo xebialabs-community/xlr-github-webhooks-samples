@@ -1,0 +1,19 @@
+---
+apiVersion: xl-release/v1
+kind: Templates
+spec:
+- directory: Webhook Samples
+  children:
+  - name: Post-jython-authTEST
+    type: events.PostWebhookEndpoint
+    path: jython-webhookTEST
+    authentication:
+      type: events.JythonScriptAuthentication
+      authenticationScript: |-
+        global parameters
+
+        def get_tokens():
+            return parameters['token'].split(', ') if 'token' in parameters else []
+
+        # True if the 'token' query parameter exists and one of its values matches 's3cr3t'
+        authenticated = 's3cr3t' in get_tokens()

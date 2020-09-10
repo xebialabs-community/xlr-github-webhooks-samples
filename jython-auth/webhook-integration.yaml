@@ -1,0 +1,86 @@
+---
+apiVersion: xl-release/v1
+kind: Templates
+spec:
+  - directory: Webhook Samples
+    children:
+      - name: post-jython-authentication
+        type: events.PostWebhookEndpoint
+        path: jython-webhook
+        authentication:
+          type: events.JythonScriptAuthentication
+          authenticationScript: |-
+            global parameters
+
+            def get_tokens():
+                return parameters['token'].split(', ') if 'token' in parameters else []
+
+            # True if the 'token' query parameter exists and one of its values matches 's3cr3t'
+            authenticated = 's3cr3t' in get_tokens()
+
+      - template: Jython Auth Sample Template
+        phases:
+        - phase: Demo
+          tasks:
+          - name: Display variables
+            type: xlrelease.ScriptTask
+            script: |-
+              variables = releaseApi.getVariables(release.id)
+              for var in variables:
+                 print(var.key + ': ' + str(var.value))
+          - name: GATE
+            type: xlrelease.GateTask
+          color: '#0079BC'
+        variables:
+          - type: xlrelease.StringVariable
+            key: repository_name
+            requiresValue: false
+          - type: xlrelease.StringVariable
+            key: branch_name
+            requiresValue: false
+          - type: xlrelease.StringVariable
+            key: merge_request_status
+            requiresValue: false
+          - type: xlrelease.StringVariable
+            key: merge_request_author
+            requiresValue: false
+          - type: xlrelease.StringVariable
+            key: merge_request_action
+            requiresValue: false
+          - type: xlrelease.StringVariable
+            key: merge_request_assignees
+            requiresValue: false
+          - type: xlrelease.ListStringVariable
+            key: merge_request_labels
+            requiresValue: false
+          - type: xlrelease.MapStringStringVariable
+            key: merge_request_map
+            requiresValue: false
+        scriptUsername: admin
+        scriptUserPassword: admin
+        riskProfile: Default risk profile
+      - name: jython-trigger
+        type: events.EventBasedTrigger
+        mappedProperties:
+        - type: xlrelease.ListStringValue
+          targetProperty: tags
+        - type: xlrelease.VariableValue
+          targetProperty: variables[branch_name]
+          variableKey: event.project.default_branch
+        - type: xlrelease.VariableValue
+          targetProperty: variables[repository_name]
+          variableKey: event.repository.name
+
+        - type: xlrelease.VariableValue
+          targetProperty: variables[merge_request_author]
+          variableKey: event.commits[0].author.name
+
+        - type: xlrelease.VariableValue
+          targetProperty: releaseTitle
+          variableKey: event.repository.name
+        - type: xlrelease.StringValue
+          targetProperty: template
+          value: Jython Auth Sample Template
+        triggerActionType: xlrelease.CreateReleaseFromTemplateAction
+        eventSource: post-jython-authentication
+        eventType: events.HttpRequestEvent
