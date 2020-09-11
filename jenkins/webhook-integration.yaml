@@ -1,0 +1,78 @@
+---
+apiVersion: xl-release/v1
+kind: Templates
+spec:
+  - directory: Webhook Samples
+    children:
+      - name: Jenkins Webhook Endpoint
+        type: events.PostWebhookEndpoint
+        path: jenkins-sample-webhook
+        authentication:
+          type: events.NoAuthentication
+      - template: Jenkins Sample Template
+        scheduledStartDate: 2020-09-23T09:00:00-04:00
+        dueDate: 2020-09-24T09:00:00-04:00
+        phases:
+          - phase: Demo
+            tasks:
+              - name: Display variables
+                type: xlrelease.ScriptTask
+                script: |-
+                  variables = releaseApi.getVariables(release.id)
+                  for var in variables:
+                     print(var.key + ': ' + str(var.value))
+            color: '#0079BC'
+        variables:
+          - type: xlrelease.StringVariable
+            key: build_name
+            requiresValue: false
+          - type: xlrelease.StringVariable
+            key: build_url
+            requiresValue: false
+          - type: xlrelease.StringVariable
+            key: event
+            requiresValue: false
+          - type: xlrelease.StringVariable
+            key: project_name
+            requiresValue: false
+        scriptUsername: admin
+        scriptUserPassword: admin
+        riskProfile: Default risk profile
+      - name: Jenkins Build Success Event Trigger
+        type: events.EventBasedTrigger
+        description: Triggers on successful build on xlr-webhooks-sample:master
+        mappedProperties:
+          - type: xlrelease.StringValue
+            targetProperty: releaseTitle
+            value: Build SUCCESS - ${event.projectName} - ${event.buildName}
+          - type: xlrelease.StringValue
+            targetProperty: variables[build_name]
+            value: ${event.buildName}
+          - type: xlrelease.StringValue
+            targetProperty: variables[build_url]
+            value: ${event.buildUrl}
+          - type: xlrelease.StringValue
+            targetProperty: variables[event]
+            value: ${event.event}
+          - type: xlrelease.StringValue
+            targetProperty: variables[project_name]
+            value: ${event.projectName}
+          - type: xlrelease.StringValue
+            targetProperty: template
+            value: Jenkins Sample Template
+        triggerActionType: xlrelease.CreateReleaseFromTemplateAction
+        eventSource: Jenkins Webhook Endpoint
+        eventType: events.HttpRequestEvent
+        eventFilter:
+          type: events.ExpressionEventFilter
+          expressions:
+            - type: events.EventFilterExpressionItem
+              path: event.projectName
+              operator: EQUALS
+              valueType: STRING
+              value: "test-project"
+            - type: events.EventFilterExpressionItem
+              path: event.buildUrl
+              operator: INCLUDES
+              valueType: STRING
+              value: "http://my-jenkins-url.com/job/test%20job/16/"
