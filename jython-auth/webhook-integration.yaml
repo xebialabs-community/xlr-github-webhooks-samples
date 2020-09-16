@@ -70,11 +70,9 @@ spec:
         - type: xlrelease.VariableValue
           targetProperty: variables[repository_name]
           variableKey: event.repository.name
-
         - type: xlrelease.VariableValue
           targetProperty: variables[merge_request_author]
           variableKey: event.commits[0].author.name
-
         - type: xlrelease.VariableValue
           targetProperty: releaseTitle
           variableKey: event.repository.name
@@ -84,3 +82,13 @@ spec:
         triggerActionType: xlrelease.CreateReleaseFromTemplateAction
         eventSource: post-jython-authentication
         eventType: events.HttpRequestEvent
+        eventFilter:
+          type: events.JythonEventFilter
+          expr: |-
+            # Get token name and value from folder variables
+            id, token = headers['Auth-Token'].split(":")
+            id = "folder.%s" % id
+            if folderVariables[id] == token:
+              result = True
+            else:
+              result = False
