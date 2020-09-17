@@ -11,7 +11,7 @@ Build event can be tested using `build_success.json`.
 
 The sample YAML file will configure the following objects in Release under the *Webhook Samples* folder:
  - Single endpoint for all events from Jenkins accessible from **http://&lt;xlr-address&gt;/webhooks/jenkins-sample-webhook**
- - Trigger to handle successful jenkins build events
+ - Trigger to handle successful Jenkins build events
    - This trigger has been configured to use the visual rule editor. It checks the event payload to ensure it is only executed when the build is successful for the project 'Test job'
  - Template that the trigger use to create releases with a number of release variables that will be populated by the trigger
    
