@@ -2,6 +2,10 @@
 
 This repository showcases the **Webhook event trigger** feature with example integrations for the following third-party systems and events:
 * GitHub - React to push to master and pull request with a label being opened and synchronised
+* BitBucket - Same events as above
+* Gitlab - Same events as above
+* Atlassian JIRA - Epic has been closed as Resolved
+* Jenkins - Build pipeline completed with status success
 
 For a general overview of the functionality please refer to the documentation topic [Webhooks overview](https://docs.xebialabs.com/release/webhooks/webhooks-overview/). The feature is available in Release 9.7 and up.
 
