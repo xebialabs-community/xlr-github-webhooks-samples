@@ -10,8 +10,6 @@ spec:
         authentication:
           type: events.NoAuthentication
       - template: Jenkins Sample Template
-        scheduledStartDate: 2020-09-23T09:00:00-04:00
-        dueDate: 2020-09-24T09:00:00-04:00
         phases:
           - phase: Demo
             tasks:
@@ -38,13 +36,13 @@ spec:
         scriptUsername: admin
         scriptUserPassword: admin
         riskProfile: Default risk profile
-      - name: Jenkins Build Success Event Trigger
+      - name: Jenkins Build Event Trigger
         type: events.EventBasedTrigger
-        description: Triggers on successful build on xlr-webhooks-sample:master
+        description: Triggers on successful build of project 'Test job'
         mappedProperties:
           - type: xlrelease.StringValue
             targetProperty: releaseTitle
-            value: Build SUCCESS - ${event.projectName} - ${event.buildName}
+            value: Release ${event.projectName}${event.buildName}
           - type: xlrelease.StringValue
             targetProperty: variables[build_name]
             value: ${event.buildName}
@@ -70,9 +68,9 @@ spec:
               path: event.projectName
               operator: EQUALS
               valueType: STRING
-              value: "test-project"
+              value: "Test job"
             - type: events.EventFilterExpressionItem
-              path: event.buildUrl
-              operator: INCLUDES
+              path: event.event
+              operator: EQUALS
               valueType: STRING
-              value: "http://my-jenkins-url.com/job/test%20job/16/"
+              value: "success"
