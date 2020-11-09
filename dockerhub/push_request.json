@@ -1,0 +1,25 @@
+{
+    "push_data": {
+        "pushed_at": 1604678260,
+        "images": [],
+        "tag": "latest",
+        "pusher": "xlr-dev"
+    },
+    "callback_url": "https://registry.hub.docker.com/u/xlrelease/xlr-dockerhub-webhook/hook/21d54a2gagcfd41fffj32h53201ffii5g/",
+    "repository": {
+        "status": "Active",
+        "description": "Repository to demonstrate Dockerhub webhook integration",
+        "is_trusted": false,
+        "full_description": "",
+        "repo_url": "https://hub.docker.com/r/xlrelease/xlr-dockerhub-webhook",
+        "owner": "xlr-dev",
+        "is_official": false,
+        "is_private": false,
+        "name": "xlr-dockerhub-webhook",
+        "namespace": "xlrelease",
+        "star_count": 0,
+        "comment_count": 0,
+        "date_created": 1604673022,
+        "repo_name": "xlrelease/xlr-dockerhub-webhook"
+    }
+}

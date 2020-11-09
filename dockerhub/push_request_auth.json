@@ -1,0 +1,25 @@
+{
+    "push_data": {
+        "pushed_at": 1604698191,
+        "images": [],
+        "tag": "latest",
+        "pusher": "xlr-dev"
+    },
+    "callback_url": "https://registry.hub.docker.com/u/xlr-dev/xlr-dockerhub-webhook-auth/hook/2a34bdfj3i1bg404fdabgb1bci5cie2db/",
+    "repository": {
+        "status": "Active",
+        "description": "",
+        "is_trusted": false,
+        "full_description": "",
+        "repo_url": "https://hub.docker.com/r/xlr-dev/xlr-dockerhub-webhook-auth",
+        "owner": "xlr-dev",
+        "is_official": false,
+        "is_private": false,
+        "name": "xlr-dockerhub-webhook-auth",
+        "namespace": "xlr-dev",
+        "star_count": 0,
+        "comment_count": 0,
+        "date_created": 1604697473,
+        "repo_name": "xlr-dev/xlr-dockerhub-webhook-auth"
+    }
+}
