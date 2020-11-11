@@ -1,0 +1,85 @@
+---
+apiVersion: xl-release/v1
+kind: Templates
+spec:
+  - directory: Webhook Samples
+    children:
+      - name: Dockerhub Webhook Endpoint
+        type: events.PostWebhookEndpoint
+        path: dockerhub-sample-webhook
+        authentication:
+          type: events.NoAuthentication
+      - template: Dockerhub Sample Template
+        scheduledStartDate: 2020-11-05T09:00:00-05:00
+        phases:
+          - phase: Demo
+            tasks:
+              - name: Display variables
+                type: xlrelease.ScriptTask
+                script: |-
+                  variables = releaseApi.getVariables(release.id)
+                  for var in variables:
+                     print(var.key + ': ' + str(var.value))
+            color: '#0079BC'
+        variables:
+          - type: xlrelease.StringVariable
+            key: repository_repo_name
+            requiresValue: false
+          - type: xlrelease.StringVariable
+            key: repository_repo_url
+            requiresValue: false
+          - type: xlrelease.StringVariable
+            key: push_data_pushed_at
+            requiresValue: false          
+          - type: xlrelease.StringVariable
+            key: push_data_pusher
+            requiresValue: false
+          - type: xlrelease.StringVariable
+            key: push_data_tag
+            requiresValue: false
+          - type: xlrelease.ListStringVariable
+            key: images
+            requiresValue: false
+        scriptUsername: admin
+        scriptUserPassword: admin
+        riskProfile: Default risk profile
+      - name: Dockerhub Push Event Trigger
+        type: events.EventBasedTrigger
+        description: Triggers on a push to the Dockerhub xlrelease/xlr-dockerhub-webhook repository
+        mappedProperties:
+          - type: xlrelease.StringValue
+            targetProperty: releaseTitle
+            value: Dockerhub Repository Push ${event.repository.repo_name} at ${event.push_data.pushed_at}
+          - type: xlrelease.StringValue
+            targetProperty: variables[repository_repo_name]
+            value: ${event.repository.repo_name}
+          - type: xlrelease.StringValue
+            targetProperty: variables[repository_repo_url]
+            value: ${event.repository.repo_url}
+          - type: xlrelease.StringValue
+            targetProperty: variables[push_data_pushed_at]
+            value: ${event.push_data.pushed_at}
+          - type: xlrelease.StringValue
+            targetProperty: variables[push_data_pusher]
+            value: ${event.push_data.pusher}
+          - type: xlrelease.StringValue
+            targetProperty: variables[push_data_tag]
+            value: ${event.push_data.tag}
+          - type: xlrelease.VariableValue
+            targetProperty: variables[images]
+            variableKey: event.push_data.images
+          - type: xlrelease.StringValue
+            targetProperty: template
+            value: Dockerhub Sample Template
+        triggerActionType: xlrelease.CreateReleaseFromTemplateAction
+        eventSource: Dockerhub Webhook Endpoint
+        eventType: events.HttpRequestEvent
+        eventFilter:
+          type: events.ExpressionEventFilter
+          expressions:
+            - type: events.EventFilterExpressionItem
+              path: event.repository.repo_name
+              operator: EQUALS
+              valueType: STRING
+              value: xlrelease/xlr-dockerhub-webhook
+      

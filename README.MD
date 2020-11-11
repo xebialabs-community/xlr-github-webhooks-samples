@@ -6,6 +6,7 @@ This repository showcases the **Webhook event trigger** feature with example int
 * Gitlab - Same events as above
 * Atlassian JIRA - Epic has been closed as Resolved
 * Jenkins - Build pipeline completed with status success
+* Dockerhub - React to push requests to a specific repository
 
 For a general overview of the functionality please refer to the documentation topic [Webhooks overview](https://docs.xebialabs.com/release/webhooks/webhooks-overview/). The feature is available in Release 9.7 and up.
 
