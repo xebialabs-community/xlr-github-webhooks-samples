@@ -45,38 +45,17 @@ spec:
         riskProfile: Default risk profile
       - name: Dockerhub Push Event Trigger
         type: events.EventBasedTrigger
-        description: Triggers on push to Dockerhub repository
+        description: Triggers on a push to the Dockerhub xlrelease/xlr-dockerhub-webhook repository
         mappedProperties:
           - type: xlrelease.StringValue
             targetProperty: releaseTitle
             value: Dockerhub Repository Push ${event.repository.repo_name} at ${event.push_data.pushed_at}
-          - type: xlrelease.StringValue
-            targetProperty: variables[repository_name]
-            value: ${event.repository.name}
-          - type: xlrelease.StringValue
-            targetProperty: variables[repository_namespace]
-            value: ${event.repository.namespace}
-          - type: xlrelease.StringValue
-            targetProperty: variables[repository_owner]
-            value: ${event.repository.owner}
           - type: xlrelease.StringValue
             targetProperty: variables[repository_repo_name]
             value: ${event.repository.repo_name}
           - type: xlrelease.StringValue
             targetProperty: variables[repository_repo_url]
             value: ${event.repository.repo_url}
-          - type: xlrelease.StringValue
-            targetProperty: variables[repository_status]
-            value: ${event.repository.status}
-          - type: xlrelease.StringValue
-            targetProperty: variables[repository_description]
-            value: ${event.repository.description}
-          - type: xlrelease.StringValue
-            targetProperty: variables[repository_full_description]
-            value: ${event.repository.full_description}
-          - type: xlrelease.StringValue
-            targetProperty: variables[repository_date_created]
-            value: ${event.repository.date_created}
           - type: xlrelease.StringValue
             targetProperty: variables[push_data_pushed_at]
             value: ${event.push_data.pushed_at}
@@ -89,9 +68,6 @@ spec:
           - type: xlrelease.VariableValue
             targetProperty: variables[images]
             variableKey: event.push_data.images
-          - type: xlrelease.StringValue
-            targetProperty: variables[callback_url]
-            value: ${event.callback_url}
           - type: xlrelease.StringValue
             targetProperty: template
             value: Dockerhub Sample Template
