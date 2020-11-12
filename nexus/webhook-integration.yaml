@@ -1,0 +1,163 @@
+---
+apiVersion: xl-release/v1
+kind: Templates
+spec:
+  - directory: Webhook Samples
+    children:
+      - name: Nexus Webhook Endpoint
+        type: events.PostWebhookEndpoint
+        path: nexus-sample-webhook
+        authentication:
+          type: events.NoAuthentication
+      - template: Nexus Sample Template
+        scheduledStartDate: 2020-11-11T09:00:00-04:00
+        phases:
+          - phase: Demo
+            tasks:
+              - name: Display variables
+                type: xlrelease.ScriptTask
+                script: |-
+                  variables = releaseApi.getVariables(release.id)
+                  for var in variables:
+                     print(var.key + ': ' + str(var.value))
+            color: '#0079BC'
+        variables:
+          - type: xlrelease.DateVariable
+            key: timestamp
+            requiresValue: false
+          - type: xlrelease.StringVariable
+            key: initiator
+            requiresValue: false
+          - type: xlrelease.StringVariable
+            key: repository_name
+            requiresValue: false
+          - type: xlrelease.StringVariable
+            key: action
+            requiresValue: false
+          - type: xlrelease.StringVariable
+            key: asset_id
+            requiresValue: false
+          - type: xlrelease.StringVariable
+            key: asset_asset_id
+            requiresValue: false
+          - type: xlrelease.StringVariable
+            key: asset_format
+            requiresValue: false
+          - type: xlrelease.StringVariable
+            key: asset_name
+            requiresValue: false
+          - type: xlrelease.StringVariable
+            key: component_id
+            requiresValue: false
+          - type: xlrelease.StringVariable
+            key: component_component_id
+            requiresValue: false
+          - type: xlrelease.StringVariable
+            key: component_format
+            requiresValue: false
+          - type: xlrelease.StringVariable
+            key: component_name
+            requiresValue: false
+          - type: xlrelease.StringVariable
+            key: component_group
+            requiresValue: false
+          - type: xlrelease.StringVariable
+            key: component_version
+            requiresValue: false  
+        scriptUsername: admin
+        scriptUserPassword: admin
+        riskProfile: Default risk profile
+      - name: Nexus Asset Push Event Trigger
+        type: events.EventBasedTrigger
+        description: Triggers on Nexus asset push event
+        mappedProperties:
+          - type: xlrelease.StringValue
+            targetProperty: releaseTitle
+            value: Nexus Repository Asset Event - ${event.asset.name} ${event.action} at ${event.timestamp}
+          - type: xlrelease.StringValue
+            targetProperty: variables[timestamp]
+            value: ${event.timestamp}
+          - type: xlrelease.StringValue
+            targetProperty: variables[initiator]
+            value: ${event.initiator}
+          - type: xlrelease.StringValue
+            targetProperty: variables[repository_name]
+            value: ${event.repositoryName}
+          - type: xlrelease.StringValue
+            targetProperty: variables[action]
+            value: ${event.action}
+          - type: xlrelease.StringValue
+            targetProperty: variables[asset_id]
+            value: ${event.asset.id}
+          - type: xlrelease.StringValue
+            targetProperty: variables[asset_asset_id]
+            value: ${event.asset.assetId}
+          - type: xlrelease.StringValue
+            targetProperty: variables[asset_format]
+            value: ${event.asset.format}
+          - type: xlrelease.StringValue
+            targetProperty: variables[asset_name]
+            value: ${event.asset.name}
+          - type: xlrelease.StringValue
+            targetProperty: template
+            value: Nexus Sample Template
+        triggerActionType: xlrelease.CreateReleaseFromTemplateAction
+        eventSource: Nexus Webhook Endpoint
+        eventType: events.HttpRequestEvent
+        eventFilter:
+          type: events.GroovyEventFilter
+          expr: "headers.'X-Nexus-Webhook-Id' == 'rm:repository:asset' && \n\
+                event.repositoryName == 'releases' && \n\
+                event.action in ['CREATED', 'UPDATED']  && \n\
+                event.asset.format == 'maven2' && \n\
+                (event.asset.name.contains('xlr-server-') &&  event.asset.name.endsWith('.jar'))"
+      - name: Nexus Component Push Event Trigger
+        type: events.EventBasedTrigger
+        description: Triggers on Nexus component push event
+        mappedProperties:
+          - type: xlrelease.StringValue
+            targetProperty: releaseTitle
+            value: Nexus Repository component Event - ${event.component.name} ${event.action} at ${event.timestamp}
+          - type: xlrelease.StringValue
+            targetProperty: variables[timestamp]
+            value: ${event.timestamp}
+          - type: xlrelease.StringValue
+            targetProperty: variables[initiator]
+            value: ${event.initiator}
+          - type: xlrelease.StringValue
+            targetProperty: variables[repository_name]
+            value: ${event.repositoryName}
+          - type: xlrelease.StringValue
+            targetProperty: variables[action]
+            value: ${event.action}
+          - type: xlrelease.StringValue
+            targetProperty: variables[component_id]
+            value: ${event.component.id}
+          - type: xlrelease.StringValue
+            targetProperty: variables[component_component_id]
+            value: ${event.component.componentId}
+          - type: xlrelease.StringValue
+            targetProperty: variables[component_format]
+            value: ${event.component.format}
+          - type: xlrelease.StringValue
+            targetProperty: variables[component_name]
+            value: ${event.component.name}
+          - type: xlrelease.StringValue
+            targetProperty: variables[component_group]
+            value: ${event.component.group}
+          - type: xlrelease.StringValue
+            targetProperty: variables[component_version]
+            value: ${event.component.version}
+          - type: xlrelease.StringValue
+            targetProperty: template
+            value: Nexus Sample Template
+        triggerActionType: xlrelease.CreateReleaseFromTemplateAction
+        eventSource: Nexus Webhook Endpoint
+        eventType: events.HttpRequestEvent
+        eventFilter:
+          type: events.GroovyEventFilter
+          expr: "headers.'X-Nexus-Webhook-Id' == 'rm:repository:component' && \n\
+                event.repositoryName == 'releases' && \n\
+                event.action in ['CREATED', 'UPDATED']  && \n\
+                event.component.format == 'maven2' && \n\
+                event.component.name == 'xlr-server'"
