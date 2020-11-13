@@ -74,9 +74,9 @@ spec:
           - type: xlrelease.StringValue
             targetProperty: releaseTitle
             value: Nexus Repository Asset Event - ${event.asset.name} ${event.action} at ${event.timestamp}
-          - type: xlrelease.StringValue
+          - type: xlrelease.VariableValue
             targetProperty: variables[timestamp]
-            value: ${event.timestamp}
+            variableKey: event.timestamp
           - type: xlrelease.StringValue
             targetProperty: variables[initiator]
             value: ${event.initiator}
@@ -118,9 +118,9 @@ spec:
           - type: xlrelease.StringValue
             targetProperty: releaseTitle
             value: Nexus Repository component Event - ${event.component.name} ${event.action} at ${event.timestamp}
-          - type: xlrelease.StringValue
+          - type: xlrelease.VariableValue
             targetProperty: variables[timestamp]
-            value: ${event.timestamp}
+            variableKey: event.timestamp
           - type: xlrelease.StringValue
             targetProperty: variables[initiator]
             value: ${event.initiator}
