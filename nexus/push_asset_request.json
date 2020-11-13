@@ -1,0 +1,13 @@
+{
+    "timestamp": "2020-11-12T12:00:00.000+00:00",
+    "nodeId": "CDC85CEC-8CF36CB1-C01F8DBF-9E0D7F6D-019BDC9F",
+    "initiator": "jenkins/127.0.0.1",
+    "repositoryName": "releases",
+    "action": "CREATED",
+    "asset": {
+        "id": "27b904ba431d9e5ecd41f0ac9a0a1d70",
+        "assetId": "dGVzdFJlbGVhc2U6MjdiOTA0YmE0MzFkOWU1ZWNkNDFmMGFjOWEwYTFkNzA",
+        "format": "maven2",
+        "name": "com/xebialabs/xlrelease/xlr-server/9.8.0-930.113/xlr-server-9.8.0-930.113.jar"
+    }
+}

@@ -1,0 +1,2 @@
+Content-Type: application/json; charset=UTF-8
+X-Nexus-Webhook-Id: rm:repository:component
