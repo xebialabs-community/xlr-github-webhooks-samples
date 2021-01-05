@@ -1,0 +1,132 @@
+---
+apiVersion: xl-release/v1
+kind: Templates
+spec:
+  - directory: Webhook Samples
+    children:
+      - name: Version One Webhook Endpoint
+        type: events.PostWebhookEndpoint
+        path: version-one-sample-webhook
+        authentication:
+          type: events.NoAuthentication
+      - template: Version One Sample Template
+        phases:
+          - phase: Demo
+            tasks:
+              - name: Display variables
+                type: xlrelease.ScriptTask
+                script: |-
+                  variables = releaseApi.getVariables(release.id)
+                  for var in variables:
+                     print(var.key + ': ' + str(var.value))
+            color: '#0079BC'
+        variables:
+          - type: xlrelease.StringVariable
+            key: event_type
+            requiresValue: false
+          - type: xlrelease.StringVariable
+            key: asset_type
+            requiresValue: false
+          - type: xlrelease.StringVariable
+            key: href
+            requiresValue: false
+          - type: xlrelease.StringVariable
+            key: timestamp
+            requiresValue: false
+          - type: xlrelease.StringVariable
+            key: instigator_name
+            requiresValue: false
+          - type: xlrelease.ListStringVariable
+            key: changes
+            requiresValue: false          
+        scriptUsername: admin
+        scriptUserPassword: admin
+        riskProfile: Default risk profile
+      - name: Version One Asset Created Event Trigger
+        type: events.EventBasedTrigger
+        description: Triggers on asset created event for asset type of Story
+        mappedProperties:
+          - type: xlrelease.StringValue
+            targetProperty: releaseTitle
+            value: Version One Asset Created Event - Story created
+          - type: xlrelease.StringValue
+            targetProperty: variables[event_type]
+            value: ${event.events[0].eventType}
+          - type: xlrelease.StringValue
+            targetProperty: variables[asset_type]
+            value: ${event.events[0].targetAsset.assetType}
+          - type: xlrelease.StringValue
+            targetProperty: variables[href]
+            value: ${event.events[0].targetAsset.href}
+          - type: xlrelease.StringValue
+            targetProperty: variables[timestamp]
+            value: ${event.events[0].timestamp}
+          - type: xlrelease.StringValue
+            targetProperty: variables[instigator_name]
+            value: ${event.events[0].instigator.name}
+          - type: xlrelease.VariableValue
+            targetProperty: variables[changes]
+            variableKey: event.events[0].changes
+          - type: xlrelease.StringValue
+            targetProperty: template
+            value: Version One Sample Template
+        triggerActionType: xlrelease.CreateReleaseFromTemplateAction
+        eventSource: Version One Webhook Endpoint
+        eventType: events.HttpRequestEvent
+        eventFilter:
+          type: events.ExpressionEventFilter
+          expressions:
+            - type: events.EventFilterExpressionItem
+              path: event.events[0].eventType
+              operator: INCLUDES
+              valueType: STRING
+              value: AssetCreated
+            - type: events.EventFilterExpressionItem
+              path: event.events[0].targetAsset.assetType
+              operator: INCLUDES
+              valueType: STRING
+              value: Story
+      - name: Version One Story Completed Event Trigger
+        type: events.EventBasedTrigger
+        description: Triggers on story completed event
+        mappedProperties:
+          - type: xlrelease.StringValue
+            targetProperty: releaseTitle
+            value: Version One Story Completed by ${event.events[0].instigator.name} at ${event.events[0].timestamp}
+          - type: xlrelease.StringValue
+            targetProperty: variables[event_type]
+            value: ${event.events[0].eventType}
+          - type: xlrelease.StringValue
+            targetProperty: variables[asset_type]
+            value: ${event.events[0].targetAsset.assetType}
+          - type: xlrelease.StringValue
+            targetProperty: variables[href]
+            value: ${event.events[0].targetAsset.href}
+          - type: xlrelease.StringValue
+            targetProperty: variables[timestamp]
+            value: ${event.events[0].timestamp}
+          - type: xlrelease.StringValue
+            targetProperty: variables[instigator_name]
+            value: ${event.events[0].instigator.name}
+          - type: xlrelease.VariableValue
+            targetProperty: variables[changes]
+            variableKey: event.events[0].changes
+          - type: xlrelease.StringValue
+            targetProperty: template
+            value: Version One Sample Template
+        triggerActionType: xlrelease.CreateReleaseFromTemplateAction
+        eventSource: Version One Webhook Endpoint
+        eventType: events.HttpRequestEvent
+        eventFilter:
+          type: events.GroovyEventFilter
+          expr: "result = false \n\
+                if (event.events[0].eventType=='AssetChanged' && event.events[0].targetAsset.assetType=='Story') { \n\
+                    def changeList = event.events[0].changes \n\
+                    for (int i = 0;i<changeList.size();i++) { \n\
+                        if (changeList[i].name=='AssetState' && changeList[i].new=='Closed') { \n\
+                            result = true \n\
+                            break \n\
+                        } \n\
+                    } \n\
+                } \n\
+                result"

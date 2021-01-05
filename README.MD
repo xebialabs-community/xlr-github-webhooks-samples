@@ -8,6 +8,7 @@ This repository showcases the **Webhook event trigger** feature with example int
 * Jenkins - Build pipeline completed with status success
 * Dockerhub - React to push requests to a specific repository
 * Nexus - React to pushing of artifacts to a specific repository
+* Version One - React to a Story being created or closed
 
 For a general overview of the functionality please refer to the documentation topic [Webhooks overview](https://docs.xebialabs.com/release/webhooks/webhooks-overview/). The feature is available in Release 9.7 and up.
 
