@@ -1,0 +1,113 @@
+{
+	"subscriptionId": "11111111-2222-3333-4444-555555555555",
+	"notificationId": 3,
+	"id": "11111111-2222-3333-4444-555555555555",
+	"eventType": "git.pullrequest.created",
+	"publisherId": "tfs",
+	"message": {
+		"text": "Sample webhook project pull request 1",
+		"html": "Sample webhook project <a href=\"https://dev.azure.com/xlr-webhooks-samples/_git/xlr-webhooks-samples/pullrequest/1\">pull request 1</a>",
+		"markdown": "Sample webhook project [pull request 1](https://dev.azure.com/xlr-webhooks-samples/_git/xlr-webhooks-samples/pullrequest/1))"
+	},
+	"detailedMessage": {
+		"text": "Sample webhook project pull request 1 (sample) in xlr-webhooks-samples\r\nhttps://dev.azure.com/xlr-webhooks-samples/_git/xlr-webhooks-samples/\r\nsample PR\r\n",
+		"html": "Sample webhook project <a href=\"https://dev.azure.com/xlr-webhooks-samples/_git/xlr-webhooks-samples/pullrequest/1\">pull request 1</a> (sample) in <a href=\"https://dev.azure.com/xlr-webhooks-samples/_git/xlr-webhooks-samples/\">xlr-webhooks-samples</a><p>sample PR</p>",
+		"markdown": "Sample webhook project [pull request 1](https://dev.azure.com/xlr-webhooks-samples/_git/xlr-webhooks-samples/pullrequest/1) (sample) in [xlr-webhooks-samples](https://dev.azure.com/xlr-webhooks-samples/_git/xlr-webhooks-samples/)\r\nsample PR\r\n"
+	},
+	"resource": {
+		"repository": {
+			"id": "11111111-2222-3333-4444-555555555555",
+			"name": "xlr-webhooks-samples",
+			"url": "https://dev.azure.com/11111111-2222-3333-4444-555555555555/_apis/git/repositories/11111111-2222-3333-4444-555555555555",
+			"project": {
+				"id": "11111111-2222-3333-4444-555555555555",
+				"name": "xlr-webhooks-samples",
+				"description": "xlr-webhooks-samples project",
+				"url": "https://dev.azure.com/_apis/projects/11111111-2222-3333-4444-555555555555",
+				"state": "wellFormed",
+				"revision": 27,
+				"visibility": "private",
+				"lastUpdateTime": "2020-12-28T16:31:09.18Z"
+			},
+			"size": 13802,
+			"remoteUrl": "https://sample@dev.azure.com/xlr-webhooks-samples/_git/xlr-webhooks-samples",
+			"sshUrl": "git@ssh.dev.azure.com:v3/xlr-webhooks-samples/xlr-webhooks-samples",
+			"webUrl": "https://dev.azure.com/xlr-webhooks-samples/_git/xlr-webhooks-samples"
+		},
+		"pullRequestId": 1,
+		"codeReviewId": 1,
+		"status": "active",
+		"createdBy": {
+			"displayName": "John Smith",
+			"url": "https://spsprodcus5.vssps.visualstudio.com/11111111-2222-3333-4444-555555555555/_apis/Identities/11111111-2222-3333-4444-555555555555",
+			"_links": {
+				"avatar": {
+					"href": "https://dev.azure.com/_apis/GraphProfile/MemberAvatars/aad.123"
+				}
+			},
+			"id": "11111111-2222-3333-4444-555555555555",
+			"uniqueName": "jsmith@email.com",
+			"imageUrl": "https://dev.azure.com/_api/_common/identityImage?id=11111111-2222-3333-4444-555555555555",
+			"descriptor": "aad.123"
+		},
+		"creationDate": "2020-12-28T21:38:40.0279027Z",
+		"title": "sample",
+		"description": "sample PR",
+		"sourceRefName": "refs/heads/sample",
+		"targetRefName": "refs/heads/master",
+		"mergeStatus": "succeeded",
+		"isDraft": false,
+		"mergeId": "11111111-2222-3333-4444-555555555555",
+		"lastMergeSourceCommit": {
+			"commitId": "71e7af8a0a2684c22f426e69eb20ab691673f372",
+			"url": "https://dev.azure.com/11111111-2222-3333-4444-555555555555/_apis/git/repositories/11111111-2222-3333-4444-555555555555/commits/71e7af8a0a2684c22f426e69eb20ab691673f372"
+		},
+		"lastMergeTargetCommit": {
+			"commitId": "f0acd70665ce9247fa785c6180ea6f0c76f7d0d6",
+			"url": "https://dev.azure.com/11111111-2222-3333-4444-555555555555/_apis/git/repositories/11111111-2222-3333-4444-555555555555/commits/f0acd70665ce9247fa785c6180ea6f0c76f7d0d6"
+		},
+		"lastMergeCommit": {
+			"commitId": "7010a303cff59c0bc84e3bb16ea6297deedad242",
+			"author": {
+				"name": "John Smith",
+				"email": "jsmith@email.com",
+				"date": "2020-12-28T21:38:40Z"
+			},
+			"committer": {
+				"name": "John Smith",
+				"email": "jsmith@email.com",
+				"date": "2020-12-28T21:38:40Z"
+			},
+			"comment": "Merge pull request 1 from sample into master",
+			"url": "https://dev.azure.com/11111111-2222-3333-4444-555555555555/_apis/git/repositories/afb8ec38-a51b-4edf-9ba2-41f5c5b78709/commits/7010a303cff59c0bc84e3bb16ea6297deedad242"
+		},
+		"reviewers": [],
+		"url": "https://dev.azure.com/11111111-2222-3333-4444-555555555555/_apis/git/repositories/afb8ec38-a51b-4edf-9ba2-41f5c5b78709/pullRequests/1",
+		"_links": {
+			"web": {
+				"href": "https://dev.azure.com/xlr-webhooks-samples/_git/xlr-webhooks-samples/pullrequest/1"
+			},
+			"statuses": {
+				"href": "https://dev.azure.com/c900acf8-1cee-4c9e-a000-fd638b1e1625/_apis/git/repositories/afb8ec38-a51b-4edf-9ba2-41f5c5b78709/pullRequests/1/statuses"
+			}
+		},
+		"supportsIterations": true,
+		"artifactId": "vstfs:///Git/PullRequestId/11111111-2222-3333-4444-555555555555%2fafb8ec38-a51b-4edf-9ba2-41f5c5b78709%2f4"
+	},
+	"resourceVersion": "1.0",
+	"resourceContainers": {
+		"collection": {
+			"id": "11111111-2222-3333-4444-555555555555",
+			"baseUrl": "https://dev.azure.com/"
+		},
+		"account": {
+			"id": "11111111-2222-3333-4444-555555555555",
+			"baseUrl": "https://dev.azure.com/"
+		},
+		"project": {
+			"id": "11111111-2222-3333-4444-555555555555",
+			"baseUrl": "https://dev.azure.com/"
+		}
+	},
+	"createdDate": "2020-12-28T21:38:46.4950624Z"
+}
