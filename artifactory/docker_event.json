@@ -1,0 +1,27 @@
+{
+    "domain": "docker",
+    "event_type": "pushed",
+    "data": {
+        "image_name": "xlr-webhooks-samples",
+        "name": "manifest.json",
+        "path": "xlr-webhooks-samples/latest/manifest.json",
+        "platforms": [
+        {
+            "architecture": "amd64",
+            "os": "linux"
+        },
+        {
+            "architecture": "arm",
+            "os": "linux"
+        },
+        {
+            "architecture": "arm64",
+            "os": "linux"
+        }
+        ],
+        "repo_key": "xlr-docker-webhooks-samples",
+        "sha256": "ee6d5090de708e69cd14ba5fc7727967edec0f148b021acda24c7b2263f60cb0",
+        "size": 1234,
+        "tag": "latest"
+    }
+}
