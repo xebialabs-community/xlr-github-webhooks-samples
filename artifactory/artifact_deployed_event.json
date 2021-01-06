@@ -1,0 +1,11 @@
+{
+    "domain": "artifact",
+    "event_type": "deployed",
+    "data": {
+        "name": "xlr-webhook-sample.jar",
+        "path": "sample_dir/xlr-webhooks-samples.jar",
+        "repo_key": "xlr-webhooks-samples",
+        "sha256": "ee6d5090de708e69cd14ba5fc7727967edec0f148b021acda24c7b2263f60cb0",
+        "size": 1263444
+    }
+}

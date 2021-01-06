@@ -1,0 +1,117 @@
+---
+apiVersion: xl-release/v1
+kind: Templates
+spec:
+  - directory: Webhook Samples
+    children:
+      - name: Azure DevOps Webhook Endpoint
+        type: events.PostWebhookEndpoint
+        path: azure-devops-sample-webhook
+        authentication:
+          type: events.NoAuthentication
+      - template: Azure DevOps Sample Template
+        phases:
+          - phase: Demo
+            tasks:
+              - name: Display variables
+                type: xlrelease.ScriptTask
+                script: |-
+                  variables = releaseApi.getVariables(release.id)
+                  for var in variables:
+                     print(var.key + ': ' + str(var.value))
+            color: '#0079BC'
+        variables:
+          - type: xlrelease.StringVariable
+            key: event_type
+            requiresValue: false
+          - type: xlrelease.StringVariable
+            key: message
+            requiresValue: false
+          - type: xlrelease.StringVariable
+            key: build_number
+            requiresValue: false
+          - type: xlrelease.StringVariable
+            key: status
+            requiresValue: false
+          - type: xlrelease.StringVariable
+            key: repository_name
+            requiresValue: false
+          - type: xlrelease.StringVariable
+            key: originator
+            requiresValue: false
+          - type: xlrelease.MapStringStringVariable
+            key: resources
+            requiresValue: false
+        scriptUsername: admin
+        scriptUserPassword: admin
+        riskProfile: Default risk profile
+      - name: Azure DevOps Pull Request Event Trigger
+        type: events.EventBasedTrigger
+        description: Triggers on pull request events to xlr-webhooks-samples repository
+        mappedProperties:
+          - type: xlrelease.StringValue
+            targetProperty: releaseTitle
+            value: Azure DevOps Pull Request - ${event.eventType}
+          - type: xlrelease.StringValue
+            targetProperty: variables[event_type]
+            value: ${event.eventType}
+          - type: xlrelease.StringValue
+            targetProperty: variables[message]
+            value: ${event.message.text}
+          - type: xlrelease.StringValue
+            targetProperty: variables[repository_name]
+            value: ${event.resource.repository.name}
+          - type: xlrelease.StringValue
+            targetProperty: variables[status]
+            value: ${event.resource.status}
+          - type: xlrelease.StringValue
+            targetProperty: variables[originator]
+            value: ${event.resource.createdBy.uniqueName}
+          - type: xlrelease.VariableValue
+            targetProperty: variables[resources]
+            variableKey: event.resource
+          - type: xlrelease.StringValue
+            targetProperty: template
+            value: Azure DevOps Sample Template
+        triggerActionType: xlrelease.CreateReleaseFromTemplateAction
+        eventSource: Azure DevOps Webhook Endpoint
+        eventType: events.HttpRequestEvent
+        eventFilter:
+          type: events.GroovyEventFilter
+          expr: "event.resource.repository.name == 'xlr-webhooks-samples' && \n\
+                event.eventType in ['git.pullrequest.created', 'git.pullrequest.updated']"
+      - name: Azure DevOps Build Event Trigger
+        type: events.EventBasedTrigger
+        description: Triggers on build events.
+        mappedProperties:
+          - type: xlrelease.StringValue
+            targetProperty: releaseTitle
+            value: Build Event - ${event.message.text}
+          - type: xlrelease.StringValue
+            targetProperty: variables[event_type]
+            value: ${event.eventType}
+          - type: xlrelease.StringValue
+            targetProperty: variables[message]
+            value: ${event.message.text}
+          - type: xlrelease.StringValue
+            targetProperty: variables[build_number]
+            value: ${event.resource.buildNumber}
+          - type: xlrelease.StringValue
+            targetProperty: variables[status]
+            value: ${event.resource.status}
+          - type: xlrelease.StringValue
+            targetProperty: variables[originator]
+            value: ${event.resource.requests[-1:].requestedFor.uniqueName}
+          - type: xlrelease.VariableValue
+            targetProperty: variables[resources]
+            variableKey: event.resource
+          - type: xlrelease.StringValue
+            targetProperty: template
+            value: Azure DevOps Sample Template
+        triggerActionType: xlrelease.CreateReleaseFromTemplateAction
+        eventSource: Azure DevOps Webhook Endpoint
+        eventType: events.HttpRequestEvent
+        eventFilter:
+          type: events.GroovyEventFilter
+          expr: "event.eventType == 'build.complete' && \n\
+                event.resource.status in ['succeeded', 'partiallysucceeded', 'failed', 'stopped']"
