@@ -1,0 +1,258 @@
+{
+	"events": [
+		{
+			"eventType": "AssetCreated",
+			"webhookId": "xlr-webhook-sample",
+			"sequenceId": 2303,
+			"timestamp": "2020-12-27T16:00:00.000Z",
+			"targetAsset": {
+				"_oid": "Story:2043:3323",
+				"assetType": "Story",
+				"href": "https://www.version1host/xlr_webhooks/story.mvc/Summary?oidToken=Story%3A2043%3A3323"
+			},
+			"changes": [
+				{
+					"name": "AssetType",
+					"old": null,
+					"new": "Story",
+					"act": "Set"
+				},
+				{
+					"name": "Timebox",
+					"old": null,
+					"new": "NULL",
+					"act": "Set"
+				},
+				{
+					"name": "Customer",
+					"old": null,
+					"new": "NULL",
+					"act": "Set"
+				},
+				{
+					"name": "IdentifiedIn",
+					"old": null,
+					"new": "NULL",
+					"act": "Set"
+				},
+				{
+					"name": "Team",
+					"old": null,
+					"new": "NULL",
+					"act": "Set"
+				},
+				{
+					"name": "Super",
+					"old": null,
+					"new": "Epic:1109:2707",
+					"act": "Set"
+				},
+				{
+					"name": "AssetState",
+					"old": null,
+					"new": "Opened",
+					"act": "Set"
+				},
+				{
+					"name": "Description",
+					"old": null,
+					"new": "",
+					"act": "Set"
+				},
+				{
+					"name": "Name",
+					"old": null,
+					"new": "xlr-webhook-sample",
+					"act": "Set"
+				},
+				{
+					"name": "Reference",
+					"old": null,
+					"new": "",
+					"act": "Set"
+				},
+				{
+					"name": "ToDo",
+					"old": null,
+					"new": "",
+					"act": "Set"
+				},
+				{
+					"name": "DetailEstimate",
+					"old": null,
+					"new": "",
+					"act": "Set"
+				},
+				{
+					"name": "RequestedBy",
+					"old": null,
+					"new": "",
+					"act": "Set"
+				},
+				{
+					"name": "Value",
+					"old": null,
+					"new": "",
+					"act": "Set"
+				},
+				{
+					"name": "Order",
+					"old": null,
+					"new": "1073761592",
+					"act": "Set"
+				},
+				{
+					"name": "Estimate",
+					"old": null,
+					"new": "10",
+					"act": "Set"
+				},
+				{
+					"name": "LastVersion",
+					"old": null,
+					"new": "",
+					"act": "Set"
+				},
+				{
+					"name": "OriginalEstimate",
+					"old": null,
+					"new": "",
+					"act": "Set"
+				},
+				{
+					"name": "Owners",
+					"new": "Member:20:2730",
+					"act": "Added"
+				},
+				{
+					"name": "Number",
+					"old": null,
+					"new": "B-01105",
+					"act": "Set"
+				},
+				{
+					"name": "Scope",
+					"old": null,
+					"new": "Scope:0:0",
+					"act": "Set"
+				},
+				{
+					"name": "Source",
+					"old": null,
+					"new": "NULL",
+					"act": "Set"
+				},
+				{
+					"name": "Priority",
+					"old": null,
+					"new": "NULL",
+					"act": "Set"
+				},
+				{
+					"name": "Status",
+					"old": null,
+					"new": "NULL",
+					"act": "Set"
+				},
+				{
+					"name": "Category",
+					"old": null,
+					"new": "NULL",
+					"act": "Set"
+				},
+				{
+					"name": "Risk",
+					"old": null,
+					"new": "NULL",
+					"act": "Set"
+				},
+				{
+					"name": "Parent",
+					"old": null,
+					"new": "NULL",
+					"act": "Set"
+				},
+				{
+					"name": "SecurityScope",
+					"old": null,
+					"new": "Scope:0:0",
+					"act": "Set"
+				},
+				{
+					"name": "Benefits",
+					"old": null,
+					"new": "",
+					"act": "Set"
+				},
+				{
+					"name": "SplitFrom",
+					"old": null,
+					"new": "NULL",
+					"act": "Set"
+				},
+				{
+					"name": "ClassOfService",
+					"old": null,
+					"new": "NULL",
+					"act": "Set"
+				},
+				{
+					"name": "ComplexityRank",
+					"old": null,
+					"new": "",
+					"act": "Set"
+				},
+				{
+					"name": "DeliveryCategory",
+					"old": null,
+					"new": "NULL",
+					"act": "Set"
+				},
+				{
+					"name": "Custom_LeankitWorkflow",
+					"old": null,
+					"new": "",
+					"act": "Set"
+				},
+				{
+					"name": "Custom_RoadmapItem",
+					"old": null,
+					"new": "",
+					"act": "Set"
+				},
+				{
+					"name": "Custom_ReleaseNotes",
+					"old": null,
+					"new": "",
+					"act": "Set"
+				},
+				{
+					"name": "Custom_ClassofService",
+					"old": null,
+					"new": "NULL",
+					"act": "Set"
+				},
+				{
+					"name": "Custom_TShirtSize",
+					"old": null,
+					"new": "NULL",
+					"act": "Set"
+				}
+			],
+			"instigator": {
+				"_oid": "Member:20",
+				"href": "https://www.version1host/xlr_webhooks/assetdetail.v1?oid=Member:20",
+				"name": "Joseph Smith",
+				"nickName": "Joe",
+				"email": "",
+				"role": "Role:1",
+				"roleName": "System Admin",
+				"avatar": "https://www.version1host/xlr_webhooks/Image.mvc/Show?imageOid=Image%3A1903"
+			},
+			"snapshot": {
+				"_oid": "Story:2043:3323"
+			}
+		}
+	],
+	"baseUrl": "https://www.version1host/xlr_webhooks/"
+}

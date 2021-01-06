@@ -10,6 +10,7 @@ This repository showcases the **Webhook event trigger** feature with example int
 * Nexus - React to pushing of artifacts to a specific repository
 * Artifactory - React to artifact and docker events in a specific repository
 * Azure DevOps - React to pull requests created and updated as well as build completion
+* Version One - React to a Story being created or closed
 
 For a general overview of the functionality please refer to the documentation topic [Webhooks overview](https://docs.xebialabs.com/release/webhooks/webhooks-overview/). The feature is available in Release 9.7 and up.
 
