@@ -1,0 +1,155 @@
+---
+apiVersion: xl-release/v1
+kind: Templates
+spec:
+  - directory: Webhook Samples
+    children:
+      - name: Artifactory Webhook Endpoint
+        type: events.PostWebhookEndpoint
+        path: artifactory-sample-webhook
+        authentication:
+          type: events.NoAuthentication
+      - template: Artifactory Sample Template
+        phases:
+          - phase: Demo
+            tasks:
+              - name: Display variables
+                type: xlrelease.ScriptTask
+                script: |-
+                  variables = releaseApi.getVariables(release.id)
+                  for var in variables:
+                     print(var.key + ': ' + str(var.value))
+            color: '#0079BC'
+        variables:
+          - type: xlrelease.StringVariable
+            key: domain
+            requiresValue: false
+          - type: xlrelease.StringVariable
+            key: event_type
+            requiresValue: false
+          - type: xlrelease.StringVariable
+            key: repo_key
+            requiresValue: false
+          - type: xlrelease.StringVariable
+            key: path
+            requiresValue: false
+          - type: xlrelease.StringVariable
+            key: name
+            requiresValue: false
+          - type: xlrelease.StringVariable
+            key: image_name
+            requiresValue: false
+          - type: xlrelease.StringVariable
+            key: tag
+            requiresValue: false
+          - type: xlrelease.ListStringVariable
+            key: platforms
+            requiresValue: false          
+        scriptUsername: admin
+        scriptUserPassword: admin
+        riskProfile: Default risk profile
+      - name: Artifactory Artifact Deployed Event Trigger
+        type: events.EventBasedTrigger
+        description: Triggers on artifact deployed in xlr-webhooks-samples repository
+        mappedProperties:
+          - type: xlrelease.StringValue
+            targetProperty: releaseTitle
+            value: Artifactory Artifact Event - deployed ${event.data.name}
+          - type: xlrelease.StringValue
+            targetProperty: variables[domain]
+            value: ${event.domain}
+          - type: xlrelease.StringValue
+            targetProperty: variables[event_type]
+            value: ${event.event_type}
+          - type: xlrelease.StringValue
+            targetProperty: variables[repo_key]
+            value: ${event.data.repo_key}
+          - type: xlrelease.StringValue
+            targetProperty: variables[name]
+            value: ${event.data.name}
+          - type: xlrelease.StringValue
+            targetProperty: variables[path]
+            value: ${event.data.path}
+          - type: xlrelease.StringValue
+            targetProperty: template
+            value: Artifactory Sample Template
+        triggerActionType: xlrelease.CreateReleaseFromTemplateAction
+        eventSource: Artifactory Webhook Endpoint
+        eventType: events.HttpRequestEvent
+        eventFilter:
+          type: events.ExpressionEventFilter
+          expressions:
+            - type: events.EventFilterExpressionItem
+              path: event.domain
+              operator: EQUALS
+              valueType: STRING
+              value: artifact
+            - type: events.EventFilterExpressionItem
+              path: event.event_type
+              operator: EQUALS
+              valueType: STRING
+              value: deployed
+            - type: events.EventFilterExpressionItem
+              path: event.data.repo_key
+              operator: EQUALS
+              valueType: STRING
+              value: xlr-webhooks-samples        
+      - name: Artifactory Docker Event Trigger
+        type: events.EventBasedTrigger
+        description: Triggers on docker image pushed event to xlr-docker-webhooks-samples repository
+        mappedProperties:
+          - type: xlrelease.StringValue
+            targetProperty: releaseTitle
+            value: Artifactory Docker Event - docker image ${event.data.image_name} pushed
+          - type: xlrelease.StringValue
+            targetProperty: variables[domain]
+            value: ${event.domain}
+          - type: xlrelease.StringValue
+            targetProperty: variables[event_type]
+            value: ${event.event_type}
+          - type: xlrelease.StringValue
+            targetProperty: variables[repo_key]
+            value: ${event.data.repo_key}
+          - type: xlrelease.StringValue
+            targetProperty: variables[name]
+            value: ${event.data.name}
+          - type: xlrelease.StringValue
+            targetProperty: variables[path]
+            value: ${event.data.path}
+          - type: xlrelease.StringValue
+            targetProperty: variables[image_name]
+            value: ${event.data.image_name}
+          - type: xlrelease.StringValue
+            targetProperty: variables[tag]
+            value: ${event.data.tag}
+          - type: xlrelease.VariableValue
+            targetProperty: variables[platforms]
+            variableKey: event.data.platforms
+          - type: xlrelease.ListStringValue
+            targetProperty: tags
+            value:
+              - ${event.data.tag}
+          - type: xlrelease.StringValue
+            targetProperty: template
+            value: Artifactory Sample Template
+        triggerActionType: xlrelease.CreateReleaseFromTemplateAction
+        eventSource: Artifactory Webhook Endpoint
+        eventType: events.HttpRequestEvent
+        eventFilter:
+          type: events.ExpressionEventFilter
+          expressions:
+            - type: events.EventFilterExpressionItem
+              path: event.domain
+              operator: EQUALS
+              valueType: STRING
+              value: docker
+            - type: events.EventFilterExpressionItem
+              path: event.event_type
+              operator: EQUALS
+              valueType: STRING
+              value: pushed
+            - type: events.EventFilterExpressionItem
+              path: event.data.repo_key
+              operator: EQUALS
+              valueType: STRING
+              value: xlr-docker-webhooks-samples
